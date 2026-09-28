@@ -39,11 +39,11 @@
   - [ ] Inicializar aplicação Angular com Standalone Components.
   - [ ] Instalar e configurar **Tailwind CSS**.
 - [ ] **1.4 Configurar CI no GitHub Actions & Branch Protection**
-  - [ ] Criar workflow de CI acionado exclusivamente na abertura/atualização de Pull Request para a branch principal (`main`/`master`).
+  - [X] Criar workflow de CI acionado exclusivamente na abertura/atualização de Pull Request para a branch principal (`main`/`master`).
   - [ ] Configurar jobs base de validação de compilação (build) e linting do frontend e backend.
-  - [ ] Configurar regras de proteção de branch (*Branch Protection Rules*):
-    - [ ] Bloquear push direto para a branch principal (merge apenas via PR).
-    - [ ] Exigir aprovação do workflow de CI com sucesso no pipeline como critério obrigatório para liberação do merge.
+  - [X] Configurar regras de proteção de branch (*Branch Protection Rules*):
+    - [X] Bloquear push direto para a branch principal (merge apenas via PR).
+    - [X] Exigir aprovação do workflow de CI com sucesso no pipeline como critério obrigatório para liberação do merge.
 
 ---
 

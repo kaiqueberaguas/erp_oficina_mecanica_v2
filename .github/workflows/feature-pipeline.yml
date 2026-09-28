@@ -1,0 +1,61 @@
+name: Feature Pipeline
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+concurrency:
+  group: feature-pipeline-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (build + testes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Erp_Oficina_Mecanica_v2.slnx
+
+      - name: Build
+        run: dotnet build Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-build --verbosity normal
+
+  create-pr:
+    name: Criar PR para master
+    needs: backend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Criar Pull Request (se ainda não existir)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          existing=$(gh pr list --head "$BRANCH" --base master --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "PR #$existing já existe para $BRANCH; nada a fazer."
+            exit 0
+          fi
+
+          gh pr create \
+            --base master \
+            --head "$BRANCH" \
+            --title "$BRANCH" \
+            --body "PR criado automaticamente pela esteira após build e testes bem-sucedidos em \`$BRANCH\` (commit ${GITHUB_SHA::7})."
