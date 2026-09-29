@@ -1,5 +1,6 @@
-
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using WebApi.Models;
 
 namespace WebApi;
 
@@ -8,19 +9,18 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        //builder.AddServiceDefaults();
 
-        // Add services to the container.
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection não configurada.");
+
+        builder.Services.AddDbContext<OficinaDbContext>(options =>
+            options.UseMySql(connectionString, ServerVersion.Parse("8.0.31-mysql")));
 
         builder.Services.AddControllers();
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
 
-        //app.MapDefaultEndpoints();
-
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -28,10 +28,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-
         app.MapControllers();
 
         app.Run();
