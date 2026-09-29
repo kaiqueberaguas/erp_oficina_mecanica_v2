@@ -49,9 +49,9 @@
 
 ## 2. Configurar Docker Compose
 
-- [ ] **2.1 Banco de Dados MySQL no Docker**
-  - [ ] Configurar serviço `database` com imagem MySQL 8.0 no `docker-compose.yml`.
-  - [ ] Configurar Healthcheck do MySQL para controle de inicialização.
+- [X] **2.1 Banco de Dados MySQL no Docker**
+  - [X] Configurar serviço `database` com imagem MySQL 8.0 no `docker-compose.yml`.
+  - [X] Configurar Healthcheck do MySQL para controle de inicialização.
 - [ ] **2.2 Dockerfile do Backend (.NET 8)**
   - [ ] Adicionar serviço `backend` no `docker-compose.yml` dependente do healthcheck do MySQL.
 - [ ] **2.3 Dockerfile do Frontend (Angular)**
@@ -66,15 +66,14 @@
 
 ## 3. Backend: Banco de Dados e Entidades
 
-- [ ] **3.1 Script DDL e Carga Inicial (init.sql)**
-  - [ ] Criar script SQL inicial (`init.sql`) com o esquema das tabelas (`usuarios`, `clientes`, `carros`, `ordens_servico`).
-  - [ ] Incluir carga inicial (*Data Seeding*) com usuário administrador padrão (`admin@oficina.com` / `Admin@123`).
-  - [ ] Mapear o `init.sql` no volume de inicialização do MySQL (`/docker-entrypoint-initdb.d`) no `docker-compose.yml`.
-- [ ] **3.2 Gerar entidades usando engenharia reversa do EF Core**
-  - [ ] Executar scaffold via CLI do EF Core (`dotnet ef dbcontext scaffold`) a partir do MySQL rodando no Docker.
-- [ ] **3.3 Configurar conexão com banco de dados e DbContext**
-  - [ ] Configurar Connection String no `appsettings.json` e suporte a variáveis de ambiente.
-  - [ ] Registrar o `AppDbContext` no `Program.cs` utilizando o provedor Pomelo MySQL.
+- [X] **3.1 Script DDL e Carga Inicial (init.sql)**
+  - [X] Criar script SQL de inicialização do banco com o esquema das tabelas.
+  - [X] Incluir carga inicial com usuário administrador padrão.
+  - [X] Mapear o scripts de inicialização no volume de inicialização do MySQL.
+- [X] **3.2 Gerar entidades usando engenharia reversa do EF Core**
+  - [X] Executar scaffold via CLI do EF Core a partir do MySQL rodando no Docker.
+- [X] **3.3 Configurar conexão com banco de dados e DbContext**
+  - [X] Configurar backend para acesso ao banco de dados.
 
 ---
 
