@@ -1,0 +1,31 @@
+<header class="bg-slate-900 text-white shadow">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <span class="text-lg font-semibold">ERP Oficina</span>
+
+    <nav aria-label="Navegação principal" class="flex flex-wrap gap-4 text-sm">
+      @for (link of links; track link.rota) {
+        <a
+          [routerLink]="link.rota"
+          routerLinkActive="text-sky-300 underline"
+          class="hover:text-sky-300"
+          >{{ link.texto }}</a
+        >
+      }
+    </nav>
+
+    <div class="flex items-center gap-3 text-sm">
+      @if (auth.usuario(); as usuario) {
+        <span data-testid="usuario-logado">
+          {{ usuario.nome }} <span class="text-slate-400">({{ usuario.login }})</span>
+        </span>
+      }
+      <button
+        type="button"
+        (click)="sair()"
+        class="rounded bg-sky-600 px-3 py-1.5 font-medium hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
+      >
+        Sair
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,1 +1,57 @@
-<h1>Login</h1>
+<div class="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="entrar()"
+    novalidate
+    class="w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow"
+  >
+    <h1 class="text-2xl font-semibold text-slate-900">Entrar</h1>
+
+    @if (erro()) {
+      <p role="alert" data-testid="erro-login" class="rounded bg-red-50 px-3 py-2 text-sm text-red-700">
+        {{ erro() }}
+      </p>
+    }
+
+    <div>
+      <label for="login" class="mb-1 block text-sm font-medium text-slate-700">Login</label>
+      <input
+        id="login"
+        type="text"
+        formControlName="login"
+        autocomplete="username"
+        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      />
+      @if (form.controls.login.touched && form.controls.login.hasError('required')) {
+        <p class="mt-1 text-sm text-red-700">O login é obrigatório.</p>
+      }
+    </div>
+
+    <div>
+      <label for="senha" class="mb-1 block text-sm font-medium text-slate-700">Senha</label>
+      <input
+        id="senha"
+        type="password"
+        formControlName="senha"
+        autocomplete="current-password"
+        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      />
+      @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
+        <p class="mt-1 text-sm text-red-700">A senha é obrigatória.</p>
+      }
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="enviando()"
+      class="w-full rounded bg-sky-700 px-4 py-2 font-medium text-white hover:bg-sky-800 disabled:opacity-60"
+    >
+      {{ enviando() ? 'Entrando...' : 'Entrar' }}
+    </button>
+
+    <p class="text-center text-sm text-slate-600">
+      Não tem conta?
+      <a routerLink="/cadastro" class="font-medium text-sky-700 underline">Cadastre-se</a>
+    </p>
+  </form>
+</div>

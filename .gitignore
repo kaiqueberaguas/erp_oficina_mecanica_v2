@@ -385,12 +385,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+**/.vscode/**
 
 # Local History for Visual Studio Code
 .history/
@@ -482,3 +477,21 @@ $RECYCLE.BIN/
 *.swp
 
 CLAUDE.md
+# Angular
+.angular/
+**/dist/
+**/out-tsc/
+**/tmp/
+**/.sass-cache/
+**/connect.lock
+**/libpeerconnection.log
+**/typings/
+npm-debug.log
+yarn-error.log
+testem.log
+/frontend/**/coverage/
+.nx/cache
+.nx/workspace-data
+__screenshots__/
+.DS_Store
+Thumbs.db
