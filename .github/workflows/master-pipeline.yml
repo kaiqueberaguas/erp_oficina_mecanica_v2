@@ -1,0 +1,69 @@
+name: Master Pipeline
+
+# Dispara no merge de PR na master (push na master).
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: master-pipeline
+  cancel-in-progress: false
+
+jobs:
+  integracao-e2e:
+    name: Docker + testes integrados (backend) + E2E
+    runs-on: ubuntu-latest
+    env:
+      TEST_DB_CONNECTION: server=127.0.0.1;port=3306;database=oficina_mecanica;user=root;password=root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Subir MySQL (docker compose)
+        run: docker compose up -d --wait mysql
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build backend
+        working-directory: Backend
+        run: dotnet build Erp_Oficina_Mecanica_v2.slnx --configuration Release
+
+      - name: Testes integrados (backend)
+        working-directory: Backend
+        run: dotnet test Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-build --filter "Category=Integration" --verbosity normal
+
+      - name: Subir API (porta 5234)
+        working-directory: Backend
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          ASPNETCORE_URLS: http://localhost:5234
+        run: |
+          nohup dotnet run --project WebApi --configuration Release --no-build --no-launch-profile > ../api.log 2>&1 &
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/erp-mecanica-frontend/package-lock.json
+
+      - name: Testes E2E (Cypress)
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: frontend/erp-mecanica-frontend
+          start: npm start
+          wait-on: 'http://localhost:4200, tcp:localhost:5234'
+          wait-on-timeout: 180
+          browser: chrome
+
+      - name: Log da API (em caso de falha)
+        if: failure()
+        run: cat api.log || true
+
+      - name: Derrubar containers
+        if: always()
+        run: docker compose down -v
