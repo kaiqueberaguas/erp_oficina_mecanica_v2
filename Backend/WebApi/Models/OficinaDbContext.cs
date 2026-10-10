@@ -87,7 +87,7 @@ public partial class OficinaDbContext : DbContext
 
             entity.HasIndex(e => e.DataEntradaCarro, "idx_ordens_data_entrada");
 
-            entity.HasIndex(e => e.Status, "idx_ordens_status");
+            entity.HasIndex(e => e.Etapa, "idx_ordens_etapa");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CarroId).HasColumnName("carro_id");
@@ -98,9 +98,10 @@ public partial class OficinaDbContext : DbContext
             entity.Property(e => e.DescricaoOrdem)
                 .HasColumnType("text")
                 .HasColumnName("descricao_ordem");
-            entity.Property(e => e.Status)
-                .HasMaxLength(20)
-                .HasColumnName("status");
+            entity.Property(e => e.Etapa)
+                .HasDefaultValue(EtapaOrdem.Rascunho)
+                .HasConversion<byte>()
+                .HasColumnName("etapa");
             entity.Property(e => e.ValorServico)
                 .HasPrecision(10, 2)
                 .HasColumnName("valor_servico");
