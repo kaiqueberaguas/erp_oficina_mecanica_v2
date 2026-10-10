@@ -3,7 +3,7 @@
 -- Baseado em Documentacao/Arquitetura.md (seção 4)
 -- ============================================================================
 
-CREATE DATABASE IF NOT EXISTS tb_oficina_mecanica
+CREATE DATABASE IF NOT EXISTS oficina_mecanica
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_0900_ai_ci;
 
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS tb_usuarios (
 CREATE TABLE IF NOT EXISTS tb_clientes (
     id       INT          NOT NULL AUTO_INCREMENT,
     nome     VARCHAR(100) NOT NULL,
-    cpf      VARCHAR(14)  NOT NULL,   -- formato 000.000.000-00
+    cpf      VARCHAR(14)  NOT NULL,   -- somente dígitos (máscara é responsabilidade do front)
     contato  VARCHAR(20)  NOT NULL,   -- telefone ou e-mail
     PRIMARY KEY (id),
     CONSTRAINT uq_clientes_cpf UNIQUE (cpf)
@@ -58,17 +58,17 @@ CREATE TABLE IF NOT EXISTS tb_ordens_servico (
     carro_id               INT           NOT NULL,
     descricao_ordem        TEXT          NOT NULL,
     valor_servico          DECIMAL(10,2) NOT NULL,
-    status                 VARCHAR(20)   NOT NULL,
+    etapa                  TINYINT       NOT NULL DEFAULT 1,  -- 1 Rascunho, 2 Inicio, 3 Em andamento, 4 Finalizada, 5 Cancelada
     data_entrada_carro     DATE          NOT NULL,
     data_inicio_servico    DATE          NULL,
     data_fim_servico       DATE          NULL,
     data_retirada_veiculo  DATE          NULL,
     PRIMARY KEY (id),
     INDEX idx_ordens_carro_id (carro_id),
-    INDEX idx_ordens_status (status),
+    INDEX idx_ordens_etapa (etapa),
     INDEX idx_ordens_data_entrada (data_entrada_carro),
     CONSTRAINT fk_ordens_carro FOREIGN KEY (carro_id)
         REFERENCES tb_carros (id) ON DELETE CASCADE,
-    CONSTRAINT chk_ordens_status
-        CHECK (status IN ('aberta', 'finalizada', 'cancelada'))
+    CONSTRAINT chk_ordens_etapa
+        CHECK (etapa BETWEEN 1 AND 5)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

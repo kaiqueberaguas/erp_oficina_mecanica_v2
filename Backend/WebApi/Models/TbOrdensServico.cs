@@ -13,7 +13,7 @@ public partial class TbOrdensServico
 
     public decimal ValorServico { get; set; }
 
-    public string Status { get; set; } = null!;
+    public EtapaOrdem Etapa { get; set; } = EtapaOrdem.Rascunho;
 
     public DateOnly DataEntradaCarro { get; set; }
 

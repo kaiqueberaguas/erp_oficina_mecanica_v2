@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using WebApi.Controllers;
 using WebApi.Models;
 using WebApi.Services;
 
@@ -25,6 +26,9 @@ public class Program
         builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
         builder.Services.AddSingleton<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IClienteService, ClienteService>();
+        builder.Services.AddScoped<ICarroService, CarroService>();
+        builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -60,7 +64,7 @@ public class Program
                 .AllowAnyHeader()
                 .AllowAnyMethod()));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options => options.Filters.Add<DominioExceptionFilter>());
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
