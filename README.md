@@ -97,7 +97,7 @@ Executar no terminal, dentro da pasta do projeto.
 
 | Objetivo                              | Comando                                               |
 | :------------------------------------ | :---------------------------------------------------- |
-| Ligar o banco                         | `docker compose up -d`                                |
+| Ligar o banco                         | `docker compose mysql up -d`                          |
 | Desligar o banco (mantém os dados)    | `docker compose stop`                                 |
 | Apagar e recriar o banco do zero      | `docker compose down` e depois `docker compose up -d` |
 | Ver os logs do banco                  | `docker compose logs mysql`                           |

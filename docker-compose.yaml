@@ -18,5 +18,43 @@ services:
       timeout: 5s
       retries: 30
       start_period: 20s
+    networks:
+      - erp-network
     volumes:
       - ./Infra/scripts:/docker-entrypoint-initdb.d
+
+#   backend:
+#     build:
+#       context: ./Backend
+#       dockerfile: WebApi/Dockerfile
+#     container_name: backend
+#     restart: unless-stopped
+#     depends_on:
+#       mysql:
+#         condition: service_healthy
+#     environment:
+#       ASPNETCORE_ENVIRONMENT: Production
+#       ASPNETCORE_HTTP_PORTS: "8080"
+#       ConnectionStrings__DefaultConnection: "server=mysql;port=3306;database=oficina_mecanica;user=root;password=root"
+#       Jwt__Key: "chave-somente-para-ambiente-local-docker-trocar-em-producao-0123456789"
+#       Cors__AllowedOrigins__0: "http://localhost:4200"
+#     ports:
+#       - "5234:8080"
+#     networks:
+#       - erp-network
+
+#   frontend:
+#     build:
+#       context: ./frontend/erp-mecanica-frontend
+#     container_name: frontend
+#     restart: unless-stopped
+#     depends_on:
+#       - backend
+#     ports:
+#       - "4200:80"
+#     networks:
+#       - erp-network
+
+# networks:
+#   erp-network:
+#     driver: bridge
