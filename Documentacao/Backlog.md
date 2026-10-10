@@ -38,9 +38,9 @@
 - [X] **1.3 Setup do Frontend (Angular + Tailwind CSS)**
   - [X] Inicializar aplicação Angular com Standalone Components.
   - [X] Instalar e configurar **Tailwind CSS**.
-- [ ] **1.4 Configurar CI no GitHub Actions & Branch Protection**
+- [X] **1.4 Configurar CI no GitHub Actions & Branch Protection**
   - [X] Criar workflow de CI acionado exclusivamente na abertura/atualização de Pull Request para a branch principal (`main`/`master`).
-  - [ ] Configurar jobs base de validação de compilação (build) e linting do frontend e backend.
+  - [X] Configurar jobs base de validação de compilação (build) e linting do frontend e backend.
   - [X] Configurar regras de proteção de branch (*Branch Protection Rules*):
     - [X] Bloquear push direto para a branch principal (merge apenas via PR).
     - [X] Exigir aprovação do workflow de CI com sucesso no pipeline como critério obrigatório para liberação do merge.
@@ -52,15 +52,15 @@
 - [X] **2.1 Banco de Dados MySQL no Docker**
   - [X] Configurar serviço `database` com imagem MySQL 8.0 no `docker-compose.yml`.
   - [X] Configurar Healthcheck do MySQL para controle de inicialização.
-- [ ] **2.2 Dockerfile do Backend (.NET 8)**
-  - [ ] Adicionar serviço `backend` no `docker-compose.yml` dependente do healthcheck do MySQL.
-- [ ] **2.3 Dockerfile do Frontend (Angular)**
-  - [ ] Criar `Dockerfile` multi-stage (Node.js build + Nginx Alpine).
-  - [ ] Configurar Nginx para SPA (redirecionamento de rotas para `index.html`).
-  - [ ] Adicionar serviço `frontend` no `docker-compose.yml`.
-- [ ] **2.4 Rede e Validação**
-  - [ ] Configurar rede interna.
-  - [ ] Testar subida de todos os serviços via `docker compose up --build -d`.
+- [X] **2.2 Dockerfile do Backend (.NET 10)**
+  - [X] Adicionar serviço `backend` no `docker-compose.yml` dependente do healthcheck do MySQL.
+- [X] **2.3 Dockerfile do Frontend (Angular)**
+  - [X] Criar `Dockerfile` multi-stage (Node.js build + Nginx Alpine).
+  - [X] Configurar Nginx para SPA (redirecionamento de rotas para `index.html`).
+  - [X] Adicionar serviço `frontend` no `docker-compose.yml`.
+- [X] **2.4 Rede e Validação**
+  - [X] Configurar rede interna.
+  - [X] Testar subida de todos os serviços via `docker compose up --build -d`.
 
 ---
 
