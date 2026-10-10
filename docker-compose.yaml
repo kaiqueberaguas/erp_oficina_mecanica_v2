@@ -55,6 +55,6 @@ services:
 #     networks:
 #       - erp-network
 
-# networks:
-#   erp-network:
-#     driver: bridge
+networks:
+  erp-network:
+    driver: bridge
