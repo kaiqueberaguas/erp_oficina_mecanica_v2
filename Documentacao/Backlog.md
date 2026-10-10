@@ -104,15 +104,15 @@
   - [X] Implementar `AuthGuard` para proteção de rotas privadas.
   - [X] Implementar `AuthInterceptor` para anexar o cabeçalho `Authorization: Bearer <token>`.
   - [X] Implementar componente de cabeçalho com dados do usuário logado e botão de Logout.
-- [ ] **5.2 Testes Automatizados (Frontend)**
+- [X] **5.2 Testes Automatizados (Frontend)**
   - [X] **Testes Unitários (vitest):**
     - [X] Teste de validação de formulário (campos obrigatórios inválidos).
     - [X] Teste de chamada do `AuthService` ao submeter credenciais.
     - [X] Teste do `AuthGuard` bloqueando acesso de usuário não logado.
-  - [ ] **Testes E2E (Cypress):**
-    - [ ] Teste do fluxo completo de Cadastro de novo usuário.
-    - [ ] Teste do fluxo de Login com credenciais válidas e redirecionamento para o dashboard.
-    - [ ] Teste de exibição de mensagem de erro em caso de senha inválida.
+  - [X] **Testes E2E (Cypress):**
+    - [X] Teste do fluxo completo de Cadastro de novo usuário.
+    - [X] Teste do fluxo de Login com credenciais válidas e redirecionamento para o dashboard.
+    - [X] Teste de exibição de mensagem de erro em caso de senha inválida.
 
 ---
 
