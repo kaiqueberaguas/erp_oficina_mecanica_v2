@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   backend:
-    name: Backend (build + testes)
+    name: Backend (build + testes unitários)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,12 +31,35 @@ jobs:
       - name: Build
         run: dotnet build Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-build --verbosity normal
+      - name: Testes unitários
+        run: dotnet test Erp_Oficina_Mecanica_v2.slnx --configuration Release --no-build --filter "Category=Unit" --verbosity normal
+
+  frontend:
+    name: Frontend (testes unitários)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/erp-mecanica-frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/erp-mecanica-frontend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes unitários
+        run: npm test -- --watch=false
 
   create-pr:
     name: Criar PR para master
-    needs: backend
+    needs: [backend, frontend]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -58,4 +81,4 @@ jobs:
             --base master \
             --head "$BRANCH" \
             --title "$BRANCH" \
-            --body "PR criado automaticamente pela esteira após build e testes bem-sucedidos em \`$BRANCH\` (commit ${GITHUB_SHA::7})."
+            --body "PR criado automaticamente pela esteira após build e testes unitários (backend e frontend) bem-sucedidos em \`$BRANCH\` (commit ${GITHUB_SHA::7})."

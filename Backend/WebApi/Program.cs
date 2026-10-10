@@ -1,6 +1,11 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi;
 
@@ -16,6 +21,45 @@ public class Program
         builder.Services.AddDbContext<OficinaDbContext>(options =>
             options.UseMySql(connectionString, ServerVersion.Parse("8.0.31-mysql")));
 
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.Secao));
+        builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        builder.Services.AddSingleton<ITokenService, TokenService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer();
+
+        // Configurado via IOptions<JwtOptions> para respeitar overrides de configuração (ex.: testes).
+        builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtOptions>>((bearer, jwt) =>
+            {
+                var o = jwt.Value;
+                if (string.IsNullOrWhiteSpace(o.Key))
+                    throw new InvalidOperationException("Jwt:Key não configurada.");
+
+                bearer.MapInboundClaims = false;
+                bearer.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = o.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = o.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(o.Key)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                };
+            });
+        builder.Services.AddAuthorization();
+
+        var origensPermitidas = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy => policy
+                .WithOrigins(origensPermitidas)
+                .AllowAnyHeader()
+                .AllowAnyMethod()));
+
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
 
@@ -28,6 +72,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseCors();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 

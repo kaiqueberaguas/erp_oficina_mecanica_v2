@@ -35,9 +35,9 @@
   - [X] Incluir pasta `/Documentacao` para documentação do projeto.
 - [X] **1.2 Setup do Backend (.NET 10 Web API)**
   - [X] Criar solução .NET e projeto Web API.
-- [ ] **1.3 Setup do Frontend (Angular + Tailwind CSS)**
-  - [ ] Inicializar aplicação Angular com Standalone Components.
-  - [ ] Instalar e configurar **Tailwind CSS**.
+- [X] **1.3 Setup do Frontend (Angular + Tailwind CSS)**
+  - [X] Inicializar aplicação Angular com Standalone Components.
+  - [X] Instalar e configurar **Tailwind CSS**.
 - [ ] **1.4 Configurar CI no GitHub Actions & Branch Protection**
   - [X] Criar workflow de CI acionado exclusivamente na abertura/atualização de Pull Request para a branch principal (`main`/`master`).
   - [ ] Configurar jobs base de validação de compilação (build) e linting do frontend e backend.
@@ -79,40 +79,40 @@
 
 ## 4. Backend: Autenticação de Usuário da Aplicação
 
-- [ ] **4.1 Implementação de Negócio e Endpoints**
-  - [ ] Implementar serviço de hash de senhas seguro com BCrypt.
-  - [ ] Implementar serviço de geração e validação de token JWT.
-  - [ ] Criar `AuthController` com endpoints:
+- [X] **4.1 Implementação de Negócio e Endpoints**
+  - [X] Implementar serviço de hash de senhas seguro com BCrypt.
+  - [X] Implementar serviço de geração e validação de token JWT.
+  - [X] Criar `AuthController` com endpoints:
     - `POST /api/v1/auth/register` (Cadastro de usuário com validação de login único)
     - `POST /api/v1/auth/login` (Validação de credenciais e emissão de JWT)
     - `GET /api/v1/auth/me` (Dados do usuário autenticado)
-- [ ] **4.2 Testes Automatizados (Backend)**
-  - [ ] **Testes Unitários (xUnit + Moq):**
-  - [ ] **Testes Integrados (acessando base de dados do docker-compose):**
-    - [ ] Teste do endpoint de registro com dados válidos (HTTP 201).
-    - [ ] Teste de tentativa de cadastro com login duplicado (HTTP 400).
-    - [ ] Teste de login com credenciais corretas (HTTP 200 + token retornado) e incorretas (HTTP 401).
+- [X] **4.2 Testes Automatizados (Backend)**
+  - [X] **Testes Unitários (xUnit + Moq):**
+  - [X] **Testes Integrados (acessando base de dados do docker-compose):**
+    - [X] Teste do endpoint de registro com dados válidos (HTTP 201).
+    - [X] Teste de tentativa de cadastro com login duplicado (HTTP 400).
+    - [X] Teste de login com credenciais corretas (HTTP 200 + token retornado) e incorretas (HTTP 401).
 
 ---
 
 ## 5. Frontend: Autenticação e Usuários
 
-- [ ] **5.1 Interface e Serviços**
-  - [ ] Criar tela responsiva de **Login** estilizada com Tailwind CSS.
-  - [ ] Criar tela responsiva de **Cadastro de Usuário** (com validações de campos e confirmação de senha).
-  - [ ] Implementar `AuthService` para requisições HTTP de login/registro e armazenamento seguro do JWT.
-  - [ ] Implementar `AuthGuard` para proteção de rotas privadas.
-  - [ ] Implementar `AuthInterceptor` para anexar o cabeçalho `Authorization: Bearer <token>`.
-  - [ ] Implementar componente de cabeçalho com dados do usuário logado e botão de Logout.
-- [ ] **5.2 Testes Automatizados (Frontend)**
-  - [ ] **Testes Unitários (Jasmine / Karma):**
-    - [ ] Teste de validação de formulário (campos obrigatórios inválidos).
-    - [ ] Teste de chamada do `AuthService` ao submeter credenciais.
-    - [ ] Teste do `AuthGuard` bloqueando acesso de usuário não logado.
-  - [ ] **Testes E2E (Cypress):**
-    - [ ] Teste do fluxo completo de Cadastro de novo usuário.
-    - [ ] Teste do fluxo de Login com credenciais válidas e redirecionamento para o dashboard.
-    - [ ] Teste de exibição de mensagem de erro em caso de senha inválida.
+- [X] **5.1 Interface e Serviços**
+  - [X] Criar tela responsiva de **Login** estilizada com Tailwind CSS.
+  - [X] Criar tela responsiva de **Cadastro de Usuário** (com validações de campos e confirmação de senha).
+  - [X] Implementar `AuthService` para requisições HTTP de login/registro e armazenamento seguro do JWT.
+  - [X] Implementar `AuthGuard` para proteção de rotas privadas.
+  - [X] Implementar `AuthInterceptor` para anexar o cabeçalho `Authorization: Bearer <token>`.
+  - [X] Implementar componente de cabeçalho com dados do usuário logado e botão de Logout.
+- [X] **5.2 Testes Automatizados (Frontend)**
+  - [X] **Testes Unitários (vitest):**
+    - [X] Teste de validação de formulário (campos obrigatórios inválidos).
+    - [X] Teste de chamada do `AuthService` ao submeter credenciais.
+    - [X] Teste do `AuthGuard` bloqueando acesso de usuário não logado.
+  - [X] **Testes E2E (Cypress):**
+    - [X] Teste do fluxo completo de Cadastro de novo usuário.
+    - [X] Teste do fluxo de Login com credenciais válidas e redirecionamento para o dashboard.
+    - [X] Teste de exibição de mensagem de erro em caso de senha inválida.
 
 ---
 
