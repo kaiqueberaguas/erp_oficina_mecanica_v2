@@ -56,7 +56,7 @@ jobs:
         with:
           working-directory: frontend/erp-mecanica-frontend
           start: npm start
-          wait-on: 'http://localhost:4200, tcp:localhost:5234'
+          wait-on: 'http://localhost:4200,http://localhost:5234/openapi/v1.json'
           wait-on-timeout: 180
           browser: chrome
 
