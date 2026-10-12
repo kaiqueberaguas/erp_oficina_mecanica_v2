@@ -1,1 +1,63 @@
-<h1>Clientes</h1>
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-slate-800">
+      Clientes
+    </h1>
+
+    <button
+      class="rounded-lg bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
+    >
+      Novo Cliente
+    </button>
+  </div>
+
+  <div class="mb-4">
+    <input
+      type="text"
+      placeholder="Buscar cliente..."
+      (input)="busca.set($any($event.target).value)"
+      class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+    />
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <table class="min-w-full">
+      <thead class="bg-slate-100">
+        <tr>
+          <th class="px-4 py-3 text-left">Nome</th>
+          <th class="px-4 py-3 text-left">CPF</th>
+          <th class="px-4 py-3 text-left">Telefone</th>
+          <th class="px-4 py-3 text-center">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (cliente of clientesFiltrados(); track cliente.id) {
+          <tr class="border-t">
+            <td class="px-4 py-3">
+              {{ cliente.nome }}
+            </td>
+
+            <td class="px-4 py-3">
+              {{ cliente.cpf }}
+            </td>
+
+            <td class="px-4 py-3">
+              {{ cliente.telefone }}
+            </td>
+
+            <td class="px-4 py-3 text-center">
+              <button class="mr-2 text-blue-600">
+                Editar
+              </button>
+
+              <button class="text-red-600">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
