@@ -29,4 +29,17 @@ export class ClienteService {
   listar(): Cliente[] {
     return this.clientes;
   }
+
+  criar(cliente: Cliente): void {
+    this.clientes.push({
+      ...cliente,
+      id: this.clientes.length + 1,
+    });
+  }
+
+  excluir(id: number): void {
+    this.clientes = this.clientes.filter(
+      (cliente) => cliente.id !== id
+    );
+  }
 }
