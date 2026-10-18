@@ -118,10 +118,10 @@
 
 ## 6. Backend: CRUD entidade Clientes
 
-- [ ] **6.1 Endpoints do CRUD de Clientes**
-  - [ ] Implementar endpoints (POST - criar, GET - listar com filtro por nome/CPF, GET by ID - obter por ID, PUT - atualizar e DELETE - deletar).
-- [ ] Criar Testes Unitários
-- [ ] Criar Testes Integrados
+- [x] **6.1 Endpoints do CRUD de Clientes**
+  - [x] Implementar endpoints (POST - criar, GET - listar com filtro por nome/CPF, GET by ID - obter por ID, PUT - atualizar e DELETE - deletar).
+- [x] Criar Testes Unitários
+- [x] Criar Testes Integrados
 
 ---
 
@@ -139,10 +139,10 @@
 
 ## 8. Backend: CRUD entidade Carros
 
-- [ ] **8.1 Endpoints do CRUD de Carros**
-  - [ ] Implementar endpoints (POST - criar, GET - listar com filtro por placa/modelo, GET by ID - obter por ID, PUT - atualizar e DELETE - deletar).
-- [ ] Criar Testes Unitários
-- [ ] Criar Testes Integrados
+- [x] **8.1 Endpoints do CRUD de Carros**
+  - [x] Implementar endpoints (POST - criar, GET - listar com filtro por placa/modelo, GET by ID - obter por ID, PUT - atualizar e DELETE - deletar).
+- [x] Criar Testes Unitários
+- [x] Criar Testes Integrados
 
 ---
 
@@ -160,10 +160,10 @@
 
 ## 10. Backend: CRUD entidade Ordens de Serviço
 
-- [ ] **10.1 Endpoints do CRUD de Ordens de Serviço**
-  - [ ] Implementar endpoints (POST - criar, GET - listar com filtro por status/placa, GET by ID - obter por ID, PUT/PATCH - atualizar e transicionar status com datas automáticas, DELETE - deletar).
-- [ ] Criar Testes Unitários
-- [ ] Criar Testes Integrados
+- [x] **10.1 Endpoints do CRUD de Ordens de Serviço**
+  - [x] Implementar endpoints (POST - criar, GET - listar com filtro por status/placa, GET by ID - obter por ID, PUT/PATCH - atualizar e transicionar status com datas automáticas, DELETE - deletar).
+- [x] Criar Testes Unitários
+- [x] Criar Testes Integrados
 
 ---
 
