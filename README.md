@@ -17,6 +17,7 @@ Frontend (Angular)  ──►  Backend (API em C#)  ──►  Banco de dados (M
 | `Backend/`            | API em C# / .NET                                     |
 | `Frontend/`           | Aplicação Angular                                    |
 | `Infra/scripts/`      | Scripts SQL de criação das tabelas e dados de teste  |
+| `Infra/massa/`        | Gerador da massa de testes de volume (Python + SQL)  |
 | `docker-compose.yaml` | Sobe o banco de dados MySQL                          |
 | `Documentacao/`       | Arquitetura e Backlog                                |
 
@@ -103,6 +104,20 @@ Executar no terminal, dentro da pasta do projeto.
 | Ver os logs do banco                  | `docker compose logs mysql`                           |
 
 > `docker compose down` apaga todos os dados e recria o banco a partir dos scripts em `Infra/scripts/`. Use também quando esses scripts forem alterados, pois só são executados na criação do banco.
+
+---
+
+## Massa de testes (volume)
+
+Para popular o banco com dados de volume (**100 clientes, 150 carros e 1500 ordens** nos últimos 24 meses, 2 a 3 ordens por dia útil), com o banco ligado, rode na raiz do projeto:
+
+```
+bash Infra/gerar_massa_teste.sh
+```
+
+O script apaga clientes, carros e ordens (o usuário `admin` é mantido), executa `Infra/massa/gerar_massa.py` e carrega o SQL gerado no container `mysql`. Requer Docker, Python 3 e um terminal bash (no Windows, o Git Bash que vem com o Git).
+
+> Os dados atuais do banco (clientes, carros e ordens) são perdidos a cada execução. A janela de 24 meses termina na data fixa `HOJE` dentro de `gerar_massa.py`; atualize-a para regerar com datas mais recentes.
 
 ---
 
