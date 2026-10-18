@@ -37,6 +37,14 @@ export class ClienteService {
     });
   }
 
+  editar(clienteAtualizado: Cliente): void {
+    this.clientes = this.clientes.map((cliente) =>
+      cliente.id === clienteAtualizado.id
+        ? clienteAtualizado
+        : cliente
+    );
+  }
+
   excluir(id: number): void {
     this.clientes = this.clientes.filter(
       (cliente) => cliente.id !== id

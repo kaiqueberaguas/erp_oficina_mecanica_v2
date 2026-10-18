@@ -22,8 +22,21 @@ export class Clientes {
     telefone: '',
   };
 
+  protected editando = false;
+
+  protected editarCliente(cliente: Cliente): void {
+    this.novoCliente = { ...cliente };
+    this.editando = true;
+  }
+
   protected salvarCliente(): void {
-    this.clienteService.criar(this.novoCliente);
+    if (this.editando) {
+      this.clienteService.editar(this.novoCliente);
+    } else {
+      this.clienteService.criar(this.novoCliente);
+    }
+
+    this.clientes = this.clienteService.listar();
 
     this.novoCliente = {
       id: 0,
@@ -32,12 +45,20 @@ export class Clientes {
       telefone: '',
     };
 
-    this.clientes = this.clienteService.listar();
+    this.editando = false;
   }
 
   protected excluirCliente(id: number): void {
+    const confirmar = confirm(
+      'Tem certeza que deseja excluir este cliente?'
+    );
+
+    if (!confirmar) {
+      return;
+    }
+
     this.clienteService.excluir(id);
-    
+
     this.clientes = this.clienteService.listar();
   }
 

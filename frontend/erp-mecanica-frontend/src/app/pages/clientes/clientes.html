@@ -47,7 +47,8 @@
             </td>
 
             <td class="px-4 py-3 text-center">
-              <button class="mr-2 text-blue-600">
+              <button class="mr-2 text-blue-600"
+              (click)="editarCliente(cliente)">
                 Editar
               </button>
 
@@ -90,7 +91,7 @@
       (click)="salvarCliente()"
       class="rounded bg-green-600 px-4 py-2 text-white"
     >
-      Salvar Cliente
+      {{ editando ? 'Atualizar Cliente' : 'Salvar Cliente' }}
     </button>
   </div>
 </div>
