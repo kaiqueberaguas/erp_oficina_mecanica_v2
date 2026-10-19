@@ -48,18 +48,33 @@ export class Clientes {
     this.editando = false;
   }
 
-  protected excluirCliente(id: number): void {
-    const confirmar = confirm(
-      'Tem certeza que deseja excluir este cliente?'
-    );
-
-    if (!confirmar) {
+  protected excluirCliente(): void {
+    if (!this.clienteSelecionado) {
       return;
     }
 
-    this.clienteService.excluir(id);
+    this.clienteService.excluir(
+      this.clienteSelecionado.id
+    );
 
-    this.clientes = this.clienteService.listar();
+    this.clientes =
+      this.clienteService.listar();
+
+     this.cancelarExclusao();
+  }
+
+  protected mostrarModalExclusao = false;
+
+  protected clienteSelecionado: Cliente | null = null;
+  
+  protected abrirModalExclusao(cliente: Cliente): void {
+    this.clienteSelecionado = cliente;
+    this.mostrarModalExclusao = true;
+  }
+
+  protected cancelarExclusao(): void {
+    this.mostrarModalExclusao = false;
+    this.clienteSelecionado = null;
   }
 
   protected busca = signal('');
