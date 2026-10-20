@@ -1,1 +1,154 @@
-<h1>Carros</h1>
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-slate-800">
+      Carros
+    </h1>
+
+    <button
+      class="rounded-lg bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
+    >
+      Novo Carro
+    </button>
+  </div>
+
+  <div class="mb-4">
+    <input
+      type="text"
+      placeholder="Buscar carro..."
+      (input)="busca.set($any($event.target).value)"
+      class="w-full rounded-lg border border-slate-300 px-4 py-2"
+    />
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <table class="min-w-full">
+      <thead class="bg-slate-100">
+        <tr>
+          <th class="px-4 py-3 text-left">Placa</th>
+          <th class="px-4 py-3 text-left">Marca</th>
+          <th class="px-4 py-3 text-left">Modelo</th>
+          <th class="px-4 py-3 text-left">Ano</th>
+          <th class="px-4 py-3 text-left">Cliente</th>
+          <th class="px-4 py-3 text-center">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (carro of carrosFiltrados(); track carro.id) {
+          <tr class="border-t">
+            <td class="px-4 py-3">{{ carro.placa }}</td>
+            <td class="px-4 py-3">{{ carro.marca }}</td>
+            <td class="px-4 py-3">{{ carro.modelo }}</td>
+            <td class="px-4 py-3">{{ carro.ano }}</td>
+            <td class="px-4 py-3">{{ carro.cliente }}</td>
+
+            <td class="px-4 py-3 text-center">
+              <button
+                class="mr-2 text-blue-600"
+                (click)="editarCarro(carro)"
+            >
+                Editar
+                </button>
+
+              <button
+                class="text-red-600"
+                (click)="abrirModalExclusao(carro)"
+                >
+                Excluir
+                </button>
+
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="mt-8 rounded-lg bg-white p-6 shadow">
+        <h2 class="mb-4 text-xl font-semibold">
+            {{ editando ? 'Editar Carro' : 'Novo Carro' }}
+        </h2>
+
+        <div class="grid gap-4">
+            <input
+            [(ngModel)]="novoCarro.placa"
+            placeholder="Placa"
+            class="rounded border p-2"
+            />
+
+            <input
+            [(ngModel)]="novoCarro.marca"
+            placeholder="Marca"
+            class="rounded border p-2"
+            />
+
+            <input
+            [(ngModel)]="novoCarro.modelo"
+            placeholder="Modelo"
+            class="rounded border p-2"
+            />
+
+            <input
+            [(ngModel)]="novoCarro.ano"
+            type="number"
+            placeholder="Ano"
+            class="rounded border p-2"
+            />
+
+            <input
+            [(ngModel)]="novoCarro.cliente"
+            placeholder="Cliente"
+            class="rounded border p-2"
+            />
+
+            <button
+            (click)="salvarCarro()"
+            class="rounded bg-green-600 px-4 py-2 text-white"
+            >
+            {{ editando ? 'Atualizar Carro' : 'Salvar Carro' }}
+            </button>
+        </div>
+    </div>
+
+    @if (mostrarModalExclusao) {
+        <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        >
+        <div
+        class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
+        >
+        <h2 class="mb-4 text-xl font-semibold">
+            Confirmar Exclusão
+        </h2>
+
+        <p class="mb-6 text-slate-600">
+            Deseja realmente excluir o carro
+            <strong>
+            {{ carroSelecionado?.placa }}
+            </strong>
+            ?
+
+            Este veículo pode possuir ordens de serviço vinculadas.
+        </p>
+
+        <div class="flex justify-end gap-3">
+            <button
+                (click)="cancelarExclusao()"
+                class="rounded border px-4 py-2"
+            >
+                Cancelar
+            </button>
+
+            <button
+            (click)="excluirCarro()"
+            class="rounded bg-red-600 px-4 py-2 text-white"
+            >
+                Excluir
+            </button>
+            </div>
+        </div>
+    </div>
+    }
+
+
+  </div>
+</div>
