@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 concurrency:
   group: master-pipeline
@@ -40,7 +41,7 @@ jobs:
         working-directory: Backend
         env:
           ASPNETCORE_ENVIRONMENT: Development
-          ASPNETCORE_URLS: http://localhost:5234
+          ASPNETCORE_URLS: http://127.0.0.1:5234
         run: |
           nohup dotnet run --project WebApi --configuration Release --no-build --no-launch-profile > ../api.log 2>&1 &
 
@@ -51,18 +52,34 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/erp-mecanica-frontend/package-lock.json
 
+      - name: Instalar dependências do frontend
+        working-directory: frontend/erp-mecanica-frontend
+        run: npm ci
+
+      - name: Subir frontend (porta 4200)
+        working-directory: frontend/erp-mecanica-frontend
+        run: |
+          nohup npm start -- --host 127.0.0.1 > ../../front.log 2>&1 &
+
+      - name: Aguardar API e frontend
+        run: |
+          for url in http://127.0.0.1:5234/openapi/v1.json http://127.0.0.1:4200; do
+            curl -sf -o /dev/null --retry 90 --retry-delay 2 --retry-all-errors --retry-connrefused "$url"               || { echo "Timeout aguardando $url"; exit 1; }
+            echo "OK: $url"
+          done
+
       - name: Testes E2E (Cypress)
         uses: cypress-io/github-action@v6
         with:
           working-directory: frontend/erp-mecanica-frontend
-          start: npm start
-          wait-on: 'http://localhost:4200,http://localhost:5234/openapi/v1.json'
-          wait-on-timeout: 180
+          install: false
           browser: chrome
 
-      - name: Log da API (em caso de falha)
+      - name: Logs da API e do frontend (em caso de falha)
         if: failure()
-        run: cat api.log || true
+        run: |
+          echo "=== api.log ==="; cat api.log || true
+          echo "=== front.log ==="; cat front.log || true
 
       - name: Derrubar containers
         if: always()
