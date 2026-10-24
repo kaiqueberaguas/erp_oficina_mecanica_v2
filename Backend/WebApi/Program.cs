@@ -29,6 +29,7 @@ public class Program
         builder.Services.AddScoped<IClienteService, ClienteService>();
         builder.Services.AddScoped<ICarroService, CarroService>();
         builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
+        builder.Services.AddScoped<IDashboardService, DashboardService>();
 
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

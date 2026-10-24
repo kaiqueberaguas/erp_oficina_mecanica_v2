@@ -154,7 +154,7 @@
   - [x] Criar modal/formulário de cadastro e edição de carro com máscara de placa e seleção de cliente (combobox com busca no servidor).
   - [x] Criar modal de confirmação de exclusão alertando sobre a remoção de ordens de serviço vinculadas.
   - [x] Criar Testes Unitários (Vitest)
-  - [ ] Criar Testes E2E (Cypress)
+  - [X] Criar Testes E2E (Cypress)
 
 ---
 
@@ -177,7 +177,7 @@
   - [x] Criar modal/formulário de cadastro e edição de ordem de serviço com seleção de carro, descrição, valores e controle de transição de status.
   - [x] Criar modal de confirmação de exclusão.
   - [x] Criar Testes Unitários (Vitest)
-  - [ ] Criar Testes E2E (Cypress)
+  - [X] Criar Testes E2E (Cypress)
 - [x] **11.2 Refinamentos da listagem**
   - [x] Colunas **Veículo** e **Placa** separadas na tabela.
   - [x] Engrenagem na barra da tela para ocultar/exibir colunas (preferência salva no `localStorage`).
@@ -187,41 +187,41 @@
 
 ## 12. Backend: Dashboard e Métricas
 
-- [ ] **12.1 Implementação de Consultas Agregadas**
-  - [ ] Criar DTO de resposta consolidada (`DashboardResponseDto`).
-  - [ ] Criar `DashboardController` com o endpoint:
+- [x] **12.1 Implementação de Consultas Agregadas**
+  - [x] Criar DTO de resposta consolidada (`DashboardResponseDto`).
+  - [x] Criar `DashboardController` com o endpoint:
     - `GET /api/v1/dashboard`
-  - [ ] Implementar queries otimizadas no Entity Framework Core:
+  - [x] Implementar queries otimizadas no Entity Framework Core:
     - Faturamento total e faturamento mensal das OS finalizadas (`SumAsync`).
     - Ticket médio das ordens de serviço (`AverageAsync`).
     - Lead Time médio de reparo em dias (`data_fim_servico - data_entrada_carro`).
     - Quantidade de OS agrupadas por status (`GroupBy`).
     - Top 5 marcas de veículos com maior volume de atendimentos (`Join`/`GroupBy`).
-- [ ] **12.2 Testes Automatizados (Backend)**
-  - [ ] **Testes Unitários (xUnit + Moq):**
-    - [ ] Teste de cálculo de ticket médio com diferentes volumes de OS.
-    - [ ] Teste de cálculo do tempo médio de permanência.
-  - [ ] **Testes Integrados (.NET `WebApplicationFactory`):**
-    - [ ] Teste do endpoint `GET /api/v1/dashboard` validando a estrutura e integridade do JSON retornado.
+- [x] **12.2 Testes Automatizados (Backend)**
+  - [x] **Testes Unitários (xUnit + Moq):**
+    - [x] Teste de cálculo de ticket médio com diferentes volumes de OS.
+    - [x] Teste de cálculo do tempo médio de permanência.
+  - [x] **Testes Integrados (.NET `WebApplicationFactory`):**
+    - [x] Teste do endpoint `GET /api/v1/dashboard` validando a estrutura e integridade do JSON retornado.
 
 ---
 
 ## 13. Frontend: Dashboard e Gráficos
 
-- [ ] **13.1 Interface e Integração Visual**
-  - _Obs.: a tela do Dashboard já existe com layout e KPI cards, mas segue estática (constantes locais), pois o endpoint `/api/v1/dashboard` ainda não existe._
-  - [ ] Instalar biblioteca de gráficos (`ng2-charts` com Chart.js ou `ng-apexcharts`).
-  - [ ] Criar `DashboardService` para consumo do endpoint de métricas.
-  - [ ] Criar cards de KPI com destaque visual (Faturamento Total, Ticket Médio, Lead Time, Total de OS).
-  - [ ] Renderizar gráfico de evolução financeira mensal (barras/linhas).
-  - [ ] Renderizar gráfico de distribuição percentual de status (rosca/donut).
-  - [ ] Renderizar gráfico de barras horizontal com as Top 5 Marcas atendidas.
-- [ ] **13.2 Testes Automatizados (Frontend)**
-  - [ ] **Testes Unitários (Vitest):**
-    - [ ] Teste de renderização dos valores nos cards de KPI.
-    - [ ] Teste de tratamento de dashboard vazio (sem dados cadastrados).
-  - [ ] **Testes E2E (Playwright / Cypress):**
-    - [ ] Teste de carregamento do dashboard e visibilidade dos gráficos após o login.
+- [x] **13.1 Interface e Integração Visual**
+  - _Obs.: gráficos desenhados com SVG/CSS próprio (sem biblioteca); período, tempo no pátio e tabela de pátio foram removidos para seguir o contrato de Arquitetura.md §9.3._
+  - [x] ~~Instalar biblioteca de gráficos~~ — dispensado: gráficos em SVG/CSS próprio.
+  - [x] Criar `DashboardService` para consumo do endpoint de métricas.
+  - [x] Criar cards de KPI com destaque visual (Faturamento Total, Ticket Médio, Lead Time, Total de OS).
+  - [x] Renderizar gráfico de evolução financeira mensal (barras/linhas).
+  - [x] Renderizar gráfico de distribuição percentual de status (rosca/donut).
+  - [x] Renderizar gráfico de barras horizontal com as Top 5 Marcas atendidas.
+- [x] **13.2 Testes Automatizados (Frontend)**
+  - [x] **Testes Unitários (Vitest):**
+    - [x] Teste de renderização dos valores nos cards de KPI.
+    - [x] Teste de tratamento de dashboard vazio (sem dados cadastrados).
+  - [x] **Testes E2E (Playwright / Cypress):**
+    - [x] Teste de carregamento do dashboard e visibilidade dos gráficos após o login.
 
 ---
 
