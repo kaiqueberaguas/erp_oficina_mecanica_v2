@@ -24,4 +24,7 @@ public class AtualizarEtapaParameter
     public EtapaOrdem? Etapa { get; set; }
 
     public DateOnly? DataRetiradaVeiculo { get; set; }
+
+    // Motivo do cancelamento (ou nota da mudança de etapa).
+    public string? Observacao { get; set; }
 }

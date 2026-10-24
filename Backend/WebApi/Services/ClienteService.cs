@@ -21,7 +21,9 @@ public class ClienteService(OficinaDbContext db) : IClienteService
                 : query.Where(c => c.Nome.Contains(termo));
         }
 
-        return query.OrderBy(c => c.Nome).ThenBy(c => c.Id).PaginarAsync(page, pageSize, ParaPresenter);
+        return query.OrderBy(c => c.Nome).ThenBy(c => c.Id)
+            .Select(c => new ClientePresenter(c.Id, c.Nome, c.Cpf, c.Contato, c.TbCarros.Count))
+            .PaginarAsync(page, pageSize);
     }
 
     public async Task<ClienteDetalhePresenter> ObterAsync(int id)

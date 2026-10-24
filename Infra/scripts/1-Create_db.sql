@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS tb_ordens_servico (
     data_inicio_servico    DATE          NULL,
     data_fim_servico       DATE          NULL,
     data_retirada_veiculo  DATE          NULL,
+    observacao             TEXT          NULL,
     PRIMARY KEY (id),
     INDEX idx_ordens_carro_id (carro_id),
     INDEX idx_ordens_etapa (etapa),

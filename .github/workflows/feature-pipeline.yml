@@ -55,7 +55,7 @@ jobs:
         run: npm ci
 
       - name: Testes unitários
-        run: npm test -- --watch=false
+        run: npm run test:cov
 
   create-pr:
     name: Criar PR para master

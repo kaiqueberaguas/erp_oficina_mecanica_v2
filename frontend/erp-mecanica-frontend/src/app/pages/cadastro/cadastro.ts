@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Icone } from '../../components/icone';
 import { AuthService } from '../../services/auth.service';
 
 export function senhasIguais(grupo: AbstractControl): ValidationErrors | null {
@@ -19,7 +20,7 @@ export function senhasIguais(grupo: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-cadastro',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, Icone],
   templateUrl: './cadastro.html',
 })
 export class Cadastro {

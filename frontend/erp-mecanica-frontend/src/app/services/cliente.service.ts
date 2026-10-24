@@ -1,53 +1,38 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Cliente, ClienteForm } from '../models/cliente';
+import { Paged } from '../models/paged';
 
-export interface Cliente {
-  id: number;
-  nome: string;
-  cpf: string;
-  telefone: string;
+export interface FiltroClientes {
+  busca?: string;
+  page?: number;
+  pageSize?: number;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private clientes: Cliente[] = [
-    {
-      id: 1,
-      nome: 'João Silva',
-      cpf: '123.456.789-00',
-      telefone: '(11) 99999-9999',
-    },
-    {
-      id: 2,
-      nome: 'Maria Souza',
-      cpf: '987.654.321-00',
-      telefone: '(11) 98888-8888',
-    },
-  ];
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/clientes`;
 
-  listar(): Cliente[] {
-    return this.clientes;
+  listar(filtro: FiltroClientes = {}): Observable<Paged<Cliente>> {
+    let params = new HttpParams();
+    if (filtro.busca) params = params.set('busca', filtro.busca);
+    if (filtro.page) params = params.set('page', filtro.page);
+    if (filtro.pageSize) params = params.set('pageSize', filtro.pageSize);
+    return this.http.get<Paged<Cliente>>(this.apiUrl, { params });
   }
 
-  criar(cliente: Cliente): void {
-    this.clientes.push({
-      ...cliente,
-      id: this.clientes.length + 1,
-    });
+  criar(dados: ClienteForm): Observable<Cliente> {
+    return this.http.post<Cliente>(this.apiUrl, dados);
   }
 
-  editar(clienteAtualizado: Cliente): void {
-    this.clientes = this.clientes.map((cliente) =>
-      cliente.id === clienteAtualizado.id
-        ? clienteAtualizado
-        : cliente
-    );
+  editar(id: number, dados: ClienteForm): Observable<Cliente> {
+    return this.http.put<Cliente>(`${this.apiUrl}/${id}`, dados);
   }
 
-  excluir(id: number): void {
-    this.clientes = this.clientes.filter(
-      (cliente) => cliente.id !== id
-    );
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

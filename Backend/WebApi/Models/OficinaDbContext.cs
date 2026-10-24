@@ -102,6 +102,9 @@ public partial class OficinaDbContext : DbContext
                 .HasDefaultValue(EtapaOrdem.Rascunho)
                 .HasConversion<byte>()
                 .HasColumnName("etapa");
+            entity.Property(e => e.Observacao)
+                .HasColumnType("text")
+                .HasColumnName("observacao");
             entity.Property(e => e.ValorServico)
                 .HasPrecision(10, 2)
                 .HasColumnName("valor_servico");

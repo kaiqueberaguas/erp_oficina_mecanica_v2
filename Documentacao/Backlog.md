@@ -2,7 +2,7 @@
 
 **Projeto:** Sistema de Gestão de Ordens de Serviço para Oficina Mecânica (ERP Mecânica v2)  
 **Versão:** 2.0  
-**Data de Atualização:** 20/09/2026  
+**Data de Atualização:** 24/10/2026  
 
 ---
 
@@ -10,17 +10,17 @@
 
 | ID | Funcionalidade / Módulo | Camada | Responsável Sugerido | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Infraestrutura | DevOps | Fullstack | [ ] A Fazer |
-| **2** | Configurar Docker Compose | DevOps | Fullstack | [ ] A Fazer |
-| **3** | Backend: Banco de Dados e Entidades | Backend | Backend | [ ] A Fazer |
-| **4** | Backend: Autenticação de Usuário da Aplicação | Backend | Backend / QA | [ ] A Fazer |
-| **5** | Frontend: Autenticação e Usuários | Frontend | Frontend / QA | [ ] A Fazer |
-| **6** | Backend: CRUD entidade Clientes | Backend | Backend / QA | [ ] A Fazer |
-| **7** | Frontend: Gestão de Clientes | Frontend | Frontend / QA | [ ] A Fazer |
-| **8** | Backend: CRUD entidade Carros | Backend | Backend / QA | [ ] A Fazer |
-| **9** | Frontend: Gestão de Carros | Frontend | Frontend / QA | [ ] A Fazer |
-| **10** | Backend: CRUD entidade Ordens de Serviço | Backend | Backend / QA | [ ] A Fazer |
-| **11** | Frontend: Gestão de Ordens de Serviço | Frontend | Frontend / QA | [ ] A Fazer |
+| **1** | Infraestrutura | DevOps | Fullstack | [X] Concluído |
+| **2** | Configurar Docker Compose | DevOps | Fullstack | [X] Concluído |
+| **3** | Backend: Banco de Dados e Entidades | Backend | Backend | [X] Concluído |
+| **4** | Backend: Autenticação de Usuário da Aplicação | Backend | Backend / QA | [X] Concluído |
+| **5** | Frontend: Autenticação e Usuários | Frontend | Frontend / QA | [X] Concluído |
+| **6** | Backend: CRUD entidade Clientes | Backend | Backend / QA | [X] Concluído |
+| **7** | Frontend: Gestão de Clientes | Frontend | Frontend / QA | [X] Concluído |
+| **8** | Backend: CRUD entidade Carros | Backend | Backend / QA | [X] Concluído |
+| **9** | Frontend: Gestão de Carros | Frontend | Frontend / QA | [~] Em andamento |
+| **10** | Backend: CRUD entidade Ordens de Serviço | Backend | Backend / QA | [X] Concluído |
+| **11** | Frontend: Gestão de Ordens de Serviço | Frontend | Frontend / QA | [~] Em andamento |
 | **12** | Backend: Dashboard e Métricas | Backend | Backend / QA | [ ] A Fazer |
 | **13** | Frontend: Dashboard e Gráficos | Frontend | Frontend / QA | [ ] A Fazer |
 | **14** | Acessibilidade e Design System | Frontend | Frontend | [ ] A Fazer |
@@ -127,13 +127,13 @@
 
 ## 7. Frontend: Gestão de Clientes
 
-- [ ] **7.1 Interface e Serviços**
-  - [ ] Criar `ClienteService` para consumo dos endpoints de clientes.
-  - [ ] Criar tela de listagem de clientes (tabela com busca em tempo real, paginação e ações).
-  - [ ] Criar modal/formulário de cadastro e edição de cliente com máscaras de CPF e Telefone.
-  - [ ] Criar modal de confirmação de exclusão alertando sobre a remoção de veículos vinculados.
-  - [ ] Criar Testes Unitários (Jasmine / Karma)
-  - [ ] Criar Testes E2E (Cypress)
+- [x] **7.1 Interface e Serviços**
+  - [x] Criar `ClienteService` para consumo dos endpoints de clientes.
+  - [x] Criar tela de listagem de clientes (tabela com busca em tempo real, paginação e ações).
+  - [x] Criar modal/formulário de cadastro e edição de cliente com máscaras de CPF e Telefone.
+  - [x] Criar modal de confirmação de exclusão alertando sobre a remoção de veículos vinculados.
+  - [x] Criar Testes Unitários (Vitest)
+  - [x] Criar Testes E2E (Cypress)
 
 ---
 
@@ -148,12 +148,12 @@
 
 ## 9. Frontend: Gestão de Carros
 
-- [ ] **9.1 Interface e Serviços**
-  - [ ] Criar `CarroService` para consumo dos endpoints de carros.
-  - [ ] Criar tela de listagem de carros (tabela com busca em tempo real, paginação e ações).
-  - [ ] Criar modal/formulário de cadastro e edição de carro com máscara de placa e seleção de cliente.
-  - [ ] Criar modal de confirmação de exclusão alertando sobre a remoção de ordens de serviço vinculadas.
-  - [ ] Criar Testes Unitários (Jasmine / Karma)
+- [x] **9.1 Interface e Serviços**
+  - [x] Criar `CarroService` para consumo dos endpoints de carros.
+  - [x] Criar tela de listagem de carros (tabela com busca em tempo real, paginação e ações).
+  - [x] Criar modal/formulário de cadastro e edição de carro com máscara de placa e seleção de cliente (combobox com busca no servidor).
+  - [x] Criar modal de confirmação de exclusão alertando sobre a remoção de ordens de serviço vinculadas.
+  - [x] Criar Testes Unitários (Vitest)
   - [ ] Criar Testes E2E (Cypress)
 
 ---
@@ -161,7 +161,9 @@
 ## 10. Backend: CRUD entidade Ordens de Serviço
 
 - [x] **10.1 Endpoints do CRUD de Ordens de Serviço**
-  - [x] Implementar endpoints (POST - criar, GET - listar com filtro por status/placa, GET by ID - obter por ID, PUT/PATCH - atualizar e transicionar status com datas automáticas, DELETE - deletar).
+  - [x] Implementar endpoints (POST - criar, GET - listar paginado com filtro por etapa (múltiplas) e busca por nº da OS/placa/cliente, GET by ID - obter por ID, PUT/PATCH - atualizar e transicionar status com datas automáticas, DELETE - deletar).
+  - [x] Campo `observacao` (motivo do cancelamento) em `tb_ordens_servico` e no `PATCH /ordens/{id}/status`; registro da retirada do veículo repetindo a etapa final.
+  - [x] Presenters de listagem sem N+1 (`placa`, `marca`, `modelo`, `clienteNome`, `totalCarros`, `totalOrdens`).
 - [x] Criar Testes Unitários
 - [x] Criar Testes Integrados
 
@@ -169,13 +171,17 @@
 
 ## 11. Frontend: Gestão de Ordens de Serviço
 
-- [ ] **11.1 Interface e Serviços**
-  - [ ] Criar `OrdemServicoService` para consumo dos endpoints de ordens de serviço.
-  - [ ] Criar tela de listagem de ordens de serviço (tabela com busca em tempo real, paginação, filtros de status e ações).
-  - [ ] Criar modal/formulário de cadastro e edição de ordem de serviço com seleção de carro, descrição, valores e controle de transição de status.
-  - [ ] Criar modal de confirmação de exclusão.
-  - [ ] Criar Testes Unitários (Jasmine / Karma)
+- [x] **11.1 Interface e Serviços**
+  - [x] Criar `OrdemServicoService` para consumo dos endpoints de ordens de serviço.
+  - [x] Criar tela de listagem de ordens de serviço (tabela com busca em tempo real, paginação, filtros de status e ações).
+  - [x] Criar modal/formulário de cadastro e edição de ordem de serviço com seleção de carro, descrição, valores e controle de transição de status.
+  - [x] Criar modal de confirmação de exclusão.
+  - [x] Criar Testes Unitários (Vitest)
   - [ ] Criar Testes E2E (Cypress)
+- [x] **11.2 Refinamentos da listagem**
+  - [x] Colunas **Veículo** e **Placa** separadas na tabela.
+  - [x] Engrenagem na barra da tela para ocultar/exibir colunas (preferência salva no `localStorage`).
+  - [x] Abas de status com contagem e timeline de etapas no modal de detalhes.
 
 ---
 
@@ -203,6 +209,7 @@
 ## 13. Frontend: Dashboard e Gráficos
 
 - [ ] **13.1 Interface e Integração Visual**
+  - _Obs.: a tela do Dashboard já existe com layout e KPI cards, mas segue estática (constantes locais), pois o endpoint `/api/v1/dashboard` ainda não existe._
   - [ ] Instalar biblioteca de gráficos (`ng2-charts` com Chart.js ou `ng-apexcharts`).
   - [ ] Criar `DashboardService` para consumo do endpoint de métricas.
   - [ ] Criar cards de KPI com destaque visual (Faturamento Total, Ticket Médio, Lead Time, Total de OS).
@@ -210,7 +217,7 @@
   - [ ] Renderizar gráfico de distribuição percentual de status (rosca/donut).
   - [ ] Renderizar gráfico de barras horizontal com as Top 5 Marcas atendidas.
 - [ ] **13.2 Testes Automatizados (Frontend)**
-  - [ ] **Testes Unitários (Jasmine / Karma):**
+  - [ ] **Testes Unitários (Vitest):**
     - [ ] Teste de renderização dos valores nos cards de KPI.
     - [ ] Teste de tratamento de dashboard vazio (sem dados cadastrados).
   - [ ] **Testes E2E (Playwright / Cypress):**
