@@ -19,10 +19,14 @@ public class CarroService(OficinaDbContext db) : ICarroService
         {
             var termo = busca.Trim();
             var placa = Normalizacao.PlacaParaBusca(termo);
-            query = query.Where(c => c.Placa.Contains(placa) || c.Modelo.Contains(termo));
+            query = query.Where(c => c.Placa.Contains(placa) || c.Modelo.Contains(termo)
+                || c.Marca.Contains(termo) || c.Cliente.Nome.Contains(termo));
         }
 
-        return query.OrderBy(c => c.Placa).ThenBy(c => c.Id).PaginarAsync(page, pageSize, ParaPresenter);
+        return query.OrderBy(c => c.Placa).ThenBy(c => c.Id)
+            .Select(c => new CarroPresenter(c.Id, c.ClienteId, c.Marca, c.Modelo, c.Placa,
+                c.TbOrdensServicos.Count, c.Cliente.Nome))
+            .PaginarAsync(page, pageSize);
     }
 
     public async Task<CarroDetalhePresenter> ObterAsync(int id)

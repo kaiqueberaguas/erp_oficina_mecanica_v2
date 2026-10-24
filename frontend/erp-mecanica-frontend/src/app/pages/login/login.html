@@ -1,57 +1,105 @@
-<div class="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-  <form
-    [formGroup]="form"
-    (ngSubmit)="entrar()"
-    novalidate
-    class="w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow"
-  >
-    <h1 class="text-2xl font-semibold text-slate-900">Entrar</h1>
-
-    @if (erro()) {
-      <p role="alert" data-testid="erro-login" class="rounded bg-red-50 px-3 py-2 text-sm text-red-700">
-        {{ erro() }}
-      </p>
-    }
-
-    <div>
-      <label for="login" class="mb-1 block text-sm font-medium text-slate-700">Login</label>
-      <input
-        id="login"
-        type="text"
-        formControlName="login"
-        autocomplete="username"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.login.touched && form.controls.login.hasError('required')) {
-        <p class="mt-1 text-sm text-red-700">O login é obrigatório.</p>
-      }
-    </div>
-
-    <div>
-      <label for="senha" class="mb-1 block text-sm font-medium text-slate-700">Senha</label>
-      <input
-        id="senha"
-        type="password"
-        formControlName="senha"
-        autocomplete="current-password"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
-        <p class="mt-1 text-sm text-red-700">A senha é obrigatória.</p>
-      }
-    </div>
-
-    <button
-      type="submit"
-      [disabled]="enviando()"
-      class="w-full rounded bg-sky-700 px-4 py-2 font-medium text-white hover:bg-sky-800 disabled:opacity-60"
+<main class="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
+  <div class="flex w-full max-w-[420px] flex-col gap-5">
+    <section
+      aria-labelledby="titulo-login"
+      class="flex flex-col gap-7 rounded-[14px] border border-slate-200 bg-white px-9 pt-10 pb-8 shadow-[0_1px_2px_rgba(15,23,42,.06),0_12px_32px_-12px_rgba(15,23,42,.18)]"
     >
-      {{ enviando() ? 'Entrando...' : 'Entrar' }}
-    </button>
+      <header class="flex flex-col items-center gap-3.5 text-center">
+        <div class="flex size-14 items-center justify-center rounded-xl bg-slate-900 text-sky-300">
+          <app-icone nome="ferramenta" [tamanho]="28" />
+        </div>
+        <div class="flex flex-col gap-1">
+          <h1 id="titulo-login" class="m-0 text-2xl font-bold tracking-tight">ERP Mecânica</h1>
+          <p class="m-0 text-[15px] text-slate-600">Acesse sua conta para continuar</p>
+        </div>
+      </header>
 
-    <p class="text-center text-sm text-slate-600">
-      Não tem conta?
-      <a routerLink="/cadastro" class="font-medium text-sky-700 underline">Cadastre-se</a>
+      @if (erro()) {
+        <div
+          role="alert"
+          data-testid="erro-login"
+          class="flex items-start gap-2.5 rounded-[10px] border border-rose-200 bg-rose-50 px-3.5 py-3 text-sm leading-snug text-rose-800"
+        >
+          <span class="mt-px"><app-icone nome="alerta-circulo" /></span>
+          <span>{{ erro() }}</span>
+        </div>
+      }
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="entrar()"
+        novalidate
+        class="flex flex-col gap-[18px]"
+      >
+        <div class="flex flex-col gap-1.5">
+          <label for="login" class="text-sm font-semibold text-slate-700">Login ou E-mail</label>
+          <input
+            id="login"
+            type="text"
+            formControlName="login"
+            autocomplete="username"
+            placeholder="ex: admin@oficina.com"
+            class="box-border h-11 rounded-lg border bg-white px-3.5 text-[15px]"
+            [class]="
+              form.controls.login.touched && form.controls.login.invalid
+                ? 'border-rose-600'
+                : 'border-slate-300'
+            "
+          />
+          @if (form.controls.login.touched && form.controls.login.hasError('required')) {
+            <span class="text-[13px] text-rose-700">O login é obrigatório.</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="senha" class="text-sm font-semibold text-slate-700">Senha</label>
+          <div class="relative flex">
+            <input
+              id="senha"
+              [type]="mostrarSenha() ? 'text' : 'password'"
+              formControlName="senha"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="box-border h-11 flex-1 rounded-lg border bg-white pr-12 pl-3.5 text-[15px]"
+              [class]="
+                form.controls.senha.touched && form.controls.senha.invalid
+                  ? 'border-rose-600'
+                  : 'border-slate-300'
+              "
+            />
+            <button
+              type="button"
+              (click)="mostrarSenha.set(!mostrarSenha())"
+              [attr.aria-label]="mostrarSenha() ? 'Ocultar senha' : 'Mostrar senha'"
+              [attr.aria-pressed]="mostrarSenha()"
+              class="absolute top-0 right-0.5 flex size-11 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent text-slate-500"
+            >
+              <app-icone [nome]="mostrarSenha() ? 'olho-off' : 'olho'" [tamanho]="20" />
+            </button>
+          </div>
+          @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
+            <span class="text-[13px] text-rose-700">A senha é obrigatória.</span>
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="enviando()"
+          class="mt-1.5 flex h-[46px] cursor-pointer items-center justify-center gap-2.5 rounded-lg border-0 bg-sky-700 text-[15px] font-semibold text-white hover:bg-sky-800 disabled:cursor-not-allowed disabled:bg-slate-500"
+        >
+          @if (enviando()) {
+            <span
+              aria-hidden="true"
+              class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            ></span>
+          }
+          <span>{{ enviando() ? 'Entrando...' : 'Entrar' }}</span>
+        </button>
+      </form>
+    </section>
+    <p class="m-0 text-center text-sm text-slate-600">
+      Não possui cadastro?
+      <a routerLink="/cadastro" class="font-semibold text-sky-700 hover:text-sky-800">Cadastre-se</a>
     </p>
-  </form>
-</div>
+  </div>
+</main>

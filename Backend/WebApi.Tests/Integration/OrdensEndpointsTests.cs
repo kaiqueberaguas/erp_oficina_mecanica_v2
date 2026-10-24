@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using WebApi.Models;
 using WebApi.Parameters;
@@ -50,7 +50,7 @@ public class OrdensEndpointsTests(AuthApiFactory factory)
         Assert.Equal(cliente.Id, detalhe.Cliente.Id);
 
         var filtrada = await client.GetFromJsonAsync<PagedResultPresenter<OrdemServicoPresenter>>(
-            $"/api/v1/ordens?etapa=Cancelada&placa={carro.Placa}");
+            $"/api/v1/ordens?etapa=Cancelada&busca={carro.Placa}");
         Assert.Contains(filtrada!.Items, o => o.Id == ordem.Id);
 
         // Excluir o cliente remove carros e ordens (ON DELETE CASCADE).

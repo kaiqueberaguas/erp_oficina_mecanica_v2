@@ -11,6 +11,11 @@ public record OrdemServicoPresenter(
     DateOnly DataEntradaCarro,
     DateOnly? DataInicioServico,
     DateOnly? DataFimServico,
-    DateOnly? DataRetiradaVeiculo);
+    DateOnly? DataRetiradaVeiculo,
+    string? Observacao = null,
+    string? Placa = null,
+    string? Marca = null,
+    string? Modelo = null,
+    string? ClienteNome = null);
 
 public record OrdemServicoDetalhePresenter(OrdemServicoPresenter Ordem, CarroPresenter Carro, ClientePresenter Cliente);

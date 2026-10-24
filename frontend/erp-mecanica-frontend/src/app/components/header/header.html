@@ -1,31 +1,51 @@
-<header class="bg-slate-900 text-white shadow">
-  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-    <span class="text-lg font-semibold">ERP Oficina</span>
+<header
+  class="flex min-h-[72px] w-full flex-wrap items-center justify-between gap-x-7 gap-y-3 border-b border-slate-800 bg-slate-900 px-7 py-3 text-slate-200"
+>
+  <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
+    <a routerLink="/dashboard" class="flex items-center gap-2.5 text-slate-50 no-underline">
+      <span class="flex size-9 items-center justify-center rounded-[9px] bg-slate-800 text-sky-300">
+        <app-icone nome="ferramenta" [tamanho]="20" />
+      </span>
+      <span class="text-base font-bold tracking-tight whitespace-nowrap">ERP Oficina Mecânica</span>
+    </a>
 
-    <nav aria-label="Navegação principal" class="flex flex-wrap gap-4 text-sm">
-      @for (link of links; track link.rota) {
-        <a
-          [routerLink]="link.rota"
-          routerLinkActive="text-sky-300 underline"
-          class="hover:text-sky-300"
-          >{{ link.texto }}</a
-        >
-      }
+    <nav aria-label="Principal">
+      <ul class="m-0 flex list-none flex-wrap gap-1 p-0">
+        @for (link of links; track link.rota) {
+          <li>
+            <a
+              [routerLink]="link.rota"
+              routerLinkActive="bg-sky-300/10 font-semibold text-sky-300"
+              ariaCurrentWhenActive="page"
+              class="flex min-h-10 items-center rounded-full px-3.5 text-sm font-medium whitespace-nowrap text-slate-300 no-underline hover:text-sky-300"
+              >{{ link.texto }}</a
+            >
+          </li>
+        }
+      </ul>
     </nav>
+  </div>
 
-    <div class="flex items-center gap-3 text-sm">
-      @if (auth.usuario(); as usuario) {
-        <span data-testid="usuario-logado">
+  <div class="flex items-center gap-3.5">
+    @if (auth.usuario(); as usuario) {
+      <div class="flex items-center gap-2.5" data-testid="usuario-logado">
+        <span
+          aria-hidden="true"
+          class="flex size-9 items-center justify-center rounded-full bg-sky-900 text-[13px] font-bold text-sky-200"
+          >{{ iniciais(usuario.nome) }}</span
+        >
+        <span class="text-sm whitespace-nowrap text-slate-100">
           {{ usuario.nome }} <span class="text-slate-400">({{ usuario.login }})</span>
         </span>
-      }
-      <button
-        type="button"
-        (click)="sair()"
-        class="rounded bg-sky-600 px-3 py-1.5 font-medium hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
-      >
-        Sair
-      </button>
-    </div>
+      </div>
+    }
+    <button
+      type="button"
+      (click)="sair()"
+      class="flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-slate-700 bg-transparent px-3.5 text-sm font-medium text-slate-200 hover:bg-slate-800"
+    >
+      <app-icone nome="sair" [tamanho]="16" />
+      Sair
+    </button>
   </div>
 </header>

@@ -2,12 +2,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Icone } from '../../components/icone';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, Icone],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -21,6 +22,7 @@ export class Login {
     senha: ['', [Validators.required]],
   });
 
+  protected readonly mostrarSenha = signal(false);
   protected readonly enviando = signal(false);
   protected readonly erro = signal<string | null>(null);
 

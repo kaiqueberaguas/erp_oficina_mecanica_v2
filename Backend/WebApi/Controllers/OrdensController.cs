@@ -14,10 +14,10 @@ public class OrdensController(IOrdemServicoService ordens) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<PagedResultPresenter<OrdemServicoPresenter>>> Listar(
-        [FromQuery] EtapaOrdem? etapa, [FromQuery] string? placa,
+        [FromQuery] EtapaOrdem[]? etapa, [FromQuery] string? busca,
         [FromQuery] DateOnly? dataInicial, [FromQuery] DateOnly? dataFinal,
         [FromQuery] int page = 1, [FromQuery] int pageSize = 10) =>
-        Ok(await ordens.ListarAsync(etapa, placa, dataInicial, dataFinal, page, pageSize));
+        Ok(await ordens.ListarAsync(etapa, busca, dataInicial, dataFinal, page, pageSize));
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<OrdemServicoDetalhePresenter>> Obter(int id) =>

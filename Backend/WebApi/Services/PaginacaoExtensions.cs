@@ -19,4 +19,8 @@ public static class PaginacaoExtensions
 
         return new PagedResultPresenter<TDto>(itens.Select(mapear).ToList(), total, page, pageSize);
     }
+
+    /// <summary>Variante para consultas que já projetam o presenter.</summary>
+    public static Task<PagedResultPresenter<T>> PaginarAsync<T>(this IQueryable<T> query, int page, int pageSize) =>
+        query.PaginarAsync(page, pageSize, x => x);
 }

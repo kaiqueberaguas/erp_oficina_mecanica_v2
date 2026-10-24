@@ -1,135 +1,186 @@
-<div class="p-6">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-slate-800">
-      Clientes
-    </h1>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+  <h1 class="m-0 mr-auto text-[28px] font-bold tracking-tight">Clientes</h1>
 
-    <button
-      class="rounded-lg bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
-    >
-      Novo Cliente
-    </button>
-  </div>
-
-  <div class="mb-4">
+  <div class="relative min-w-[220px] flex-[0_1_360px]">
+    <label for="busca-cli" class="sr-only">Buscar clientes</label>
+    <span class="pointer-events-none absolute top-3.5 left-3.5 text-slate-500">
+      <app-icone nome="lupa" />
+    </span>
     <input
-      type="text"
-      placeholder="Buscar cliente..."
-      (input)="busca.set($any($event.target).value)"
-      class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      id="busca-cli"
+      type="search"
+      placeholder="Buscar por nome ou CPF..."
+      [value]="buscaDigitada()"
+      (input)="aoDigitarBusca($any($event.target).value)"
+      class="box-border h-11 w-full rounded-lg border border-slate-300 bg-white pr-3.5 pl-[42px] text-[15px]"
     />
   </div>
 
-  <div class="overflow-hidden rounded-lg bg-white shadow">
-    <table class="min-w-full">
-      <thead class="bg-slate-100">
-        <tr>
-          <th class="px-4 py-3 text-left">Nome</th>
-          <th class="px-4 py-3 text-left">CPF</th>
-          <th class="px-4 py-3 text-left">Telefone</th>
-          <th class="px-4 py-3 text-center">Ações</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (cliente of clientesFiltrados(); track cliente.id) {
-          <tr class="border-t">
-            <td class="px-4 py-3">
-              {{ cliente.nome }}
-            </td>
-
-            <td class="px-4 py-3">
-              {{ cliente.cpf }}
-            </td>
-
-            <td class="px-4 py-3">
-              {{ cliente.telefone }}
-            </td>
-
-            <td class="px-4 py-3 text-center">
-              <button class="mr-2 text-blue-600"
-              (click)="editarCliente(cliente)">
-                Editar
-              </button>
-
-              <button class="text-red-600" (click)="abrirModalExclusao(cliente)">
-                Excluir
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="mt-8 rounded-lg bg-white p-6 shadow">
-  <h2 class="mb-4 text-xl font-semibold">
-    Novo Cliente
-  </h2>
-
-  <div class="grid gap-4">
-    <input
-      [(ngModel)]="novoCliente.nome"
-      placeholder="Nome"
-      class="rounded border p-2"
-    />
-
-    <input
-      [(ngModel)]="novoCliente.cpf"
-      placeholder="CPF"
-      class="rounded border p-2"
-    />
-
-    <input
-      [(ngModel)]="novoCliente.telefone"
-      placeholder="Telefone"
-      class="rounded border p-2"
-    />
-
-    <button
-      (click)="salvarCliente()"
-      class="rounded bg-green-600 px-4 py-2 text-white"
-    >
-      {{ editando ? 'Atualizar Cliente' : 'Salvar Cliente' }}
-    </button>
-  </div>
-</div>
-
-@if (mostrarModalExclusao) {
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  <button
+    type="button"
+    (click)="novoCliente()"
+    class="flex h-11 cursor-pointer items-center gap-2 rounded-lg bg-sky-700 px-[18px] text-[15px] font-semibold whitespace-nowrap text-white hover:bg-sky-800"
   >
-    <div
-      class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
-    >
-      <h2 class="mb-4 text-xl font-semibold">
-        Confirmar Exclusão
-      </h2>
+    <app-icone nome="mais" [espessura]="2.25" />
+    Novo Cliente
+  </button>
+</div>
 
-      <p class="mb-6 text-slate-600">
-        Deseja realmente excluir o cliente
-        <strong>
-          {{ clienteSelecionado?.nome }}
-        </strong>
-        ?
+<section aria-label="Lista de clientes" class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+  @if (lista.erro()) {
+    <div role="alert" class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-sm text-rose-800">
+      <span>{{ lista.erro() }}</span>
+      <button type="button" (click)="lista.carregar()" class="h-9 cursor-pointer rounded-lg border border-rose-300 bg-white px-3 font-medium hover:bg-rose-50">Tentar novamente</button>
+    </div>
+  } @else if (lista.itens().length > 0) {
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[920px] border-collapse text-sm">
+        <thead class="bg-slate-50">
+          <tr class="text-left text-xs tracking-wider text-slate-600 uppercase">
+            <th scope="col" class="h-11 w-[72px] border-b border-slate-200 pr-3 pl-5 font-semibold">ID</th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Nome do Cliente</th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">CPF</th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Contato</th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Veículos Vinculados</th>
+            <th scope="col" class="border-b border-slate-200 pr-5 pl-3 text-right font-semibold">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cliente of lista.itens(); track cliente.id) {
+            <tr class="border-b border-slate-100">
+              <td class="h-[60px] pr-3 pl-5 text-slate-600 tabular-nums">{{ idFormatado(cliente.id) }}</td>
+              <td class="px-3 font-semibold">{{ cliente.nome }}</td>
+              <td class="px-3 text-slate-700 tabular-nums">{{ maskCpf(cliente.cpf) }}</td>
+              <td class="px-3 text-slate-700">{{ cliente.contato }}</td>
+              <td class="px-3">
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[13px] font-semibold"
+                  [class]="cliente.totalCarros ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-600'"
+                  >{{ rotuloVeiculos(cliente) }}</span
+                >
+              </td>
+              <td class="pr-5 pl-3">
+                <div class="flex justify-end gap-1.5">
+                  <a
+                    routerLink="/carros"
+                    [attr.aria-label]="'Ver veículos de ' + cliente.nome"
+                    title="Visualizar veículos"
+                    class="box-border flex size-10 items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+                  >
+                    <app-icone nome="carro" />
+                  </a>
+                  <button
+                    type="button"
+                    (click)="editarCliente(cliente)"
+                    [attr.aria-label]="'Editar ' + cliente.nome"
+                    title="Editar"
+                    class="flex size-10 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                  >
+                    <app-icone nome="lapis" [tamanho]="17" />
+                  </button>
+                  <button
+                    type="button"
+                    (click)="abrirModalExclusao(cliente)"
+                    [attr.aria-label]="'Excluir ' + cliente.nome"
+                    title="Excluir"
+                    class="flex size-10 cursor-pointer items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100"
+                  >
+                    <app-icone nome="lixeira" [tamanho]="17" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-paginacao
+      [pagina]="lista.pagina()"
+      [total]="lista.total()"
+      [itensNaPagina]="lista.itens().length"
+      rotulo="clientes"
+      (paginaChange)="lista.carregar($event)"
+    />
+  } @else if (lista.carregando()) {
+    <p class="m-0 px-6 py-16 text-center text-sm text-slate-600" role="status">Carregando clientes...</p>
+  } @else {
+    <div class="flex flex-col items-center gap-3 px-6 py-16 text-center">
+      <span class="flex size-[72px] items-center justify-center rounded-full bg-slate-100 text-slate-500">
+        <app-icone nome="usuarios" [tamanho]="34" [espessura]="1.75" />
+      </span>
+      <h2 class="m-0 text-lg font-semibold">Nenhum cliente encontrado</h2>
+      <p class="m-0 max-w-[380px] text-sm text-slate-600">
+        Tente buscar por outro nome ou CPF, ou cadastre um novo cliente.
       </p>
-
-      <div class="flex justify-end gap-3">
-        <button
-          (click)="cancelarExclusao()"
-          class="rounded border px-4 py-2"
-        >
-          Cancelar
-        </button>
-
-        <button
-          (click)="excluirCliente()"
-          class="rounded bg-red-600 px-4 py-2 text-white"
-        >
-          Excluir
-        </button>
+      <div class="mt-1 flex flex-wrap justify-center gap-2">
+        <button type="button" (click)="limparBusca()" class="h-10 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-50">Limpar busca</button>
+        <button type="button" (click)="novoCliente()" class="h-10 cursor-pointer rounded-lg bg-sky-700 px-4 text-sm font-semibold text-white hover:bg-sky-800">+ Novo Cliente</button>
       </div>
     </div>
-  </div>
+  }
+</section>
+
+@if (mostrarModalForm()) {
+  <app-modal-dialog [titulo]="editando() ? 'Editar Cliente' : 'Cadastrar Novo Cliente'" (fechar)="fecharForm()">
+    <form (ngSubmit)="salvarCliente()" novalidate class="flex flex-col gap-4 px-6 pt-[22px] pb-6">
+      <div class="flex flex-col gap-1.5">
+        <label for="c-nome" class="text-sm font-semibold text-slate-700">Nome <span class="text-rose-700">*</span></label>
+        <input
+          id="c-nome" name="nome" type="text" maxlength="100" placeholder="ex: Mariana Souza"
+          [ngModel]="form().nome" (ngModelChange)="aoDigitar('nome', $event)"
+          class="box-border h-11 rounded-lg border px-3.5 text-[15px]"
+          [class]="erro('nome') ? 'border-rose-600' : 'border-slate-300'"
+        />
+        @if (erro('nome')) { <span class="text-[13px] text-rose-700">{{ erro('nome') }}</span> }
+      </div>
+      <div class="grid grid-cols-2 gap-3.5">
+        <div class="flex min-w-0 flex-col gap-1.5">
+          <label for="c-cpf" class="text-sm font-semibold text-slate-700">CPF <span class="text-rose-700">*</span></label>
+          <input
+            id="c-cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00"
+            [ngModel]="form().cpf" (ngModelChange)="aoDigitar('cpf', $event)"
+            class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px] tabular-nums"
+            [class]="erro('cpf') ? 'border-rose-600' : 'border-slate-300'"
+          />
+          @if (erro('cpf')) { <span class="text-[13px] text-rose-700">{{ erro('cpf') }}</span> }
+        </div>
+        <div class="flex min-w-0 flex-col gap-1.5">
+          <label for="c-contato" class="text-sm font-semibold text-slate-700">Contato <span class="text-rose-700">*</span></label>
+          <input
+            id="c-contato" name="contato" type="text" maxlength="20" placeholder="(99) 99999-9999 ou e-mail"
+            [ngModel]="form().contato" (ngModelChange)="aoDigitar('contato', $event)"
+            class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px]"
+            [class]="erro('contato') ? 'border-rose-600' : 'border-slate-300'"
+          />
+          @if (erro('contato')) { <span class="text-[13px] text-rose-700">{{ erro('contato') }}</span> }
+        </div>
+      </div>
+      @if (erroApi()) { <span role="alert" class="text-[13px] text-rose-700">{{ erroApi() }}</span> }
+      <div class="mt-2 flex justify-end gap-2.5">
+        <button type="button" (click)="fecharForm()" class="h-11 cursor-pointer rounded-lg border border-slate-300 bg-white px-[18px] text-[15px] font-medium hover:bg-slate-50">Cancelar</button>
+        <button
+          type="submit" [disabled]="salvando()"
+          class="h-11 cursor-pointer rounded-lg px-[18px] text-[15px] font-semibold text-white"
+          [class]="salvando() ? 'bg-slate-500' : 'bg-sky-700 hover:bg-sky-800'"
+        >{{ salvando() ? 'Salvando...' : 'Salvar Cliente' }}</button>
+      </div>
+    </form>
+  </app-modal-dialog>
+}
+
+@if (clienteSelecionado(); as alvo) {
+  <app-confirm-delete-modal
+    titulo="Confirmar Exclusão de Cliente"
+    (confirmar)="excluirCliente()"
+    (cancelar)="cancelarExclusao()"
+  >
+    <span resumo>
+      Cliente: <strong class="text-slate-900">{{ alvo.nome }}</strong> · {{ rotuloVeiculos(alvo) }}
+    </span>
+    <span aviso>
+      <strong>Atenção:</strong> A exclusão deste cliente removerá permanentemente todos os veículos
+      associados e o histórico de ordens de serviço vinculadas (exclusão em cascata). Tem certeza que
+      deseja prosseguir?
+    </span>
+  </app-confirm-delete-modal>
 }

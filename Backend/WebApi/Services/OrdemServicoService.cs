@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Exceptions;
 using WebApi.Models;
 using WebApi.Parameters;
@@ -9,17 +9,21 @@ namespace WebApi.Services;
 public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
 {
     public Task<PagedResultPresenter<OrdemServicoPresenter>> ListarAsync(
-        EtapaOrdem? etapa, string? placa, DateOnly? dataInicial, DateOnly? dataFinal, int page, int pageSize)
+        IReadOnlyList<EtapaOrdem>? etapas, string? busca, DateOnly? dataInicial, DateOnly? dataFinal, int page, int pageSize)
     {
         var query = db.TbOrdensServicos.AsNoTracking();
 
-        if (etapa is not null)
-            query = query.Where(o => o.Etapa == etapa);
+        if (etapas is { Count: > 0 })
+            query = query.Where(o => etapas.Contains(o.Etapa));
 
-        if (!string.IsNullOrWhiteSpace(placa))
+        if (!string.IsNullOrWhiteSpace(busca))
         {
-            var termo = Normalizacao.PlacaParaBusca(placa);
-            query = query.Where(o => o.Carro.Placa.Contains(termo));
+            var termo = busca.Trim();
+            var placa = Normalizacao.PlacaParaBusca(termo);
+            var numero = int.TryParse(termo.TrimStart('#'), out var id) ? id : -1;
+            query = query.Where(o => o.Id == numero
+                || o.Carro.Placa.Contains(placa)
+                || o.Carro.Cliente.Nome.Contains(termo));
         }
 
         if (dataInicial is not null)
@@ -29,7 +33,11 @@ public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
             query = query.Where(o => o.DataEntradaCarro <= dataFinal);
 
         return query.OrderByDescending(o => o.DataEntradaCarro).ThenByDescending(o => o.Id)
-            .PaginarAsync(page, pageSize, ParaPresenter);
+            .Select(o => new OrdemServicoPresenter(
+                o.Id, o.CarroId, o.DescricaoOrdem, o.ValorServico, o.Etapa,
+                o.DataEntradaCarro, o.DataInicioServico, o.DataFimServico, o.DataRetiradaVeiculo, o.Observacao,
+                o.Carro.Placa, o.Carro.Marca, o.Carro.Modelo, o.Carro.Cliente.Nome))
+            .PaginarAsync(page, pageSize);
     }
 
     public async Task<OrdemServicoDetalhePresenter> ObterAsync(int id)
@@ -77,6 +85,7 @@ public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
         ordem.DataEntradaCarro = parametro.DataEntradaCarro ?? ordem.DataEntradaCarro;
         await db.SaveChangesAsync();
 
+        await db.Entry(ordem).Reference(o => o.Carro).Query().Include(c => c.Cliente).LoadAsync();
         return ParaPresenter(ordem);
     }
 
@@ -86,10 +95,20 @@ public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
     /// </summary>
     public async Task<OrdemServicoPresenter> AtualizarEtapaAsync(int id, AtualizarEtapaParameter parametro)
     {
-        var ordem = await db.TbOrdensServicos.FirstOrDefaultAsync(o => o.Id == id)
+        var ordem = await db.TbOrdensServicos
+            .Include(o => o.Carro).ThenInclude(c => c.Cliente)
+            .FirstOrDefaultAsync(o => o.Id == id)
             ?? throw new NaoEncontradoException("Ordem de serviço não encontrada.");
 
         var nova = parametro.Etapa!.Value;
+
+        // Mesma etapa só é aceita para registrar a retirada do veículo (OS já finalizada/cancelada).
+        if (nova == ordem.Etapa && parametro.DataRetiradaVeiculo is not null)
+        {
+            ordem.DataRetiradaVeiculo = parametro.DataRetiradaVeiculo;
+            await db.SaveChangesAsync();
+            return ParaPresenter(ordem);
+        }
 
         if (!Enum.IsDefined(nova) || nova <= ordem.Etapa)
             throw new TransicaoEtapaInvalidaException(ordem.Etapa.ToString(), nova.ToString());
@@ -109,6 +128,9 @@ public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
 
         if (parametro.DataRetiradaVeiculo is not null)
             ordem.DataRetiradaVeiculo = parametro.DataRetiradaVeiculo;
+
+        if (!string.IsNullOrWhiteSpace(parametro.Observacao))
+            ordem.Observacao = parametro.Observacao.Trim();
 
         ordem.Etapa = nova;
         await db.SaveChangesAsync();
@@ -135,5 +157,6 @@ public class OrdemServicoService(OficinaDbContext db) : IOrdemServicoService
 
     internal static OrdemServicoPresenter ParaPresenter(TbOrdensServico o) => new(
         o.Id, o.CarroId, o.DescricaoOrdem, o.ValorServico, o.Etapa,
-        o.DataEntradaCarro, o.DataInicioServico, o.DataFimServico, o.DataRetiradaVeiculo);
+        o.DataEntradaCarro, o.DataInicioServico, o.DataFimServico, o.DataRetiradaVeiculo, o.Observacao,
+        o.Carro?.Placa, o.Carro?.Marca, o.Carro?.Modelo, o.Carro?.Cliente?.Nome);
 }

@@ -23,5 +23,7 @@ public partial class TbOrdensServico
 
     public DateOnly? DataRetiradaVeiculo { get; set; }
 
+    public string? Observacao { get; set; }
+
     public virtual TbCarro Carro { get; set; } = null!;
 }

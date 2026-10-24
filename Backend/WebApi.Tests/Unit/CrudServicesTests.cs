@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Exceptions;
 using WebApi.Models;
 using WebApi.Parameters;
@@ -295,10 +295,37 @@ public class OrdemServicoServiceTests
         });
         await _service.AtualizarEtapaAsync(o1.Id, Etapa(EtapaOrdem.Inicio));
 
-        Assert.Single((await _service.ListarAsync(EtapaOrdem.Inicio, null, null, null, 1, 10)).Items);
+        Assert.Single((await _service.ListarAsync(new[] { EtapaOrdem.Inicio }, null, null, null, 1, 10)).Items);
         Assert.Single((await _service.ListarAsync(null, "xyz", null, null, 1, 10)).Items);
         Assert.Single((await _service.ListarAsync(null, null, new DateOnly(2020, 1, 1), new DateOnly(2020, 12, 31), 1, 10)).Items);
         Assert.Equal(2, (await _service.ListarAsync(null, null, null, null, 1, 10)).Total);
+        Assert.Equal(2, (await _service.ListarAsync(new[] { EtapaOrdem.Rascunho, EtapaOrdem.Inicio }, null, null, null, 1, 10)).Total);
+        Assert.Single((await _service.ListarAsync(null, $"#{o1.Id}", null, null, 1, 10)).Items);
+    }
+
+    [Fact]
+    public async Task AtualizarEtapa_MesmaEtapaComRetirada_RegistraRetirada()
+    {
+        var o = await _service.CriarAsync(Param(await NovoCarroAsync("ABC1234")));
+        await _service.AtualizarEtapaAsync(o.Id, Etapa(EtapaOrdem.Finalizada));
+
+        var r = await _service.AtualizarEtapaAsync(o.Id, Etapa(EtapaOrdem.Finalizada, new DateOnly(2026, 10, 20)));
+
+        Assert.Equal(new DateOnly(2026, 10, 20), r.DataRetiradaVeiculo);
+        Assert.Equal("ABC1234", r.Placa);
+        await Assert.ThrowsAsync<TransicaoEtapaInvalidaException>(
+            () => _service.AtualizarEtapaAsync(o.Id, Etapa(EtapaOrdem.Finalizada)));
+    }
+
+    [Fact]
+    public async Task AtualizarEtapa_GravaObservacao()
+    {
+        var o = await _service.CriarAsync(Param(await NovoCarroAsync("ABC1234")));
+
+        var cancelada = await _service.AtualizarEtapaAsync(o.Id,
+            new AtualizarEtapaParameter { Etapa = EtapaOrdem.Cancelada, Observacao = "  Cliente desistiu " });
+
+        Assert.Equal("Cliente desistiu", cancelada.Observacao);
     }
 
     [Fact]

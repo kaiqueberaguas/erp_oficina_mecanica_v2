@@ -65,7 +65,24 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "coverageInclude": [
+              "src/app/models/**/*.ts",
+              "src/app/services/{cliente,carro,ordem}.service.ts",
+              "src/app/utils/{erro-api,lista-paginada}.ts",
+              "src/app/components/{paginacao,status-badge,combobox}/*.ts",
+              "src/app/pages/{clientes,carros,ordens}/*.ts"
+            ],
+            "coverageExclude": ["**/*.spec.ts"],
+            "coverageReporters": ["text", "html"],
+            "coverageThresholds": {
+              "statements": 100,
+              "branches": 100,
+              "functions": 100,
+              "lines": 100
+            }
+          }
         }
       }
     }

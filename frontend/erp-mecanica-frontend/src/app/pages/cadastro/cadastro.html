@@ -1,89 +1,142 @@
-<div class="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8">
-  <form
-    [formGroup]="form"
-    (ngSubmit)="cadastrar()"
-    novalidate
-    class="w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow"
-  >
-    <h1 class="text-2xl font-semibold text-slate-900">Criar conta</h1>
-
-    @if (erro()) {
-      <p role="alert" data-testid="erro-cadastro" class="rounded bg-red-50 px-3 py-2 text-sm text-red-700">
-        {{ erro() }}
-      </p>
-    }
-
-    <div>
-      <label for="nome" class="mb-1 block text-sm font-medium text-slate-700">Nome</label>
-      <input
-        id="nome"
-        type="text"
-        formControlName="nome"
-        autocomplete="name"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.nome.touched && form.controls.nome.hasError('required')) {
-        <p class="mt-1 text-sm text-red-700">O nome é obrigatório.</p>
-      }
-    </div>
-
-    <div>
-      <label for="login" class="mb-1 block text-sm font-medium text-slate-700">Login</label>
-      <input
-        id="login"
-        type="text"
-        formControlName="login"
-        autocomplete="username"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.login.touched && form.controls.login.hasError('required')) {
-        <p class="mt-1 text-sm text-red-700">O login é obrigatório.</p>
-      }
-    </div>
-
-    <div>
-      <label for="senha" class="mb-1 block text-sm font-medium text-slate-700">Senha</label>
-      <input
-        id="senha"
-        type="password"
-        formControlName="senha"
-        autocomplete="new-password"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
-        <p class="mt-1 text-sm text-red-700">A senha é obrigatória.</p>
-      } @else if (form.controls.senha.touched && form.controls.senha.hasError('minlength')) {
-        <p class="mt-1 text-sm text-red-700">A senha deve ter no mínimo 6 caracteres.</p>
-      }
-    </div>
-
-    <div>
-      <label for="confirmarSenha" class="mb-1 block text-sm font-medium text-slate-700">
-        Confirmar senha
-      </label>
-      <input
-        id="confirmarSenha"
-        type="password"
-        formControlName="confirmarSenha"
-        autocomplete="new-password"
-        class="w-full rounded border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-      />
-      @if (form.controls.confirmarSenha.touched && form.hasError('senhasDiferentes')) {
-        <p class="mt-1 text-sm text-red-700">As senhas não conferem.</p>
-      }
-    </div>
-
-    <button
-      type="submit"
-      [disabled]="enviando()"
-      class="w-full rounded bg-sky-700 px-4 py-2 font-medium text-white hover:bg-sky-800 disabled:opacity-60"
+<main class="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
+  <div class="flex w-full max-w-[420px] flex-col gap-5">
+    <section
+      aria-labelledby="titulo-cadastro"
+      class="flex flex-col gap-7 rounded-[14px] border border-slate-200 bg-white px-9 pt-10 pb-8 shadow-[0_1px_2px_rgba(15,23,42,.06),0_12px_32px_-12px_rgba(15,23,42,.18)]"
     >
-      {{ enviando() ? 'Cadastrando...' : 'Cadastrar' }}
-    </button>
+      <header class="flex flex-col items-center gap-3.5 text-center">
+        <div class="flex size-14 items-center justify-center rounded-xl bg-slate-900 text-sky-300">
+          <app-icone nome="ferramenta" [tamanho]="28" />
+        </div>
+        <div class="flex flex-col gap-1">
+          <h1 id="titulo-cadastro" class="m-0 text-2xl font-bold tracking-tight">
+            Criar conta
+          </h1>
+          <p class="m-0 text-[15px] text-slate-600">Cadastre um novo operador no ERP</p>
+        </div>
+      </header>
 
-    <p class="text-center text-sm text-slate-600">
-      Já tem conta?
-      <a routerLink="/login" class="font-medium text-sky-700 underline">Entrar</a>
+      @if (erro()) {
+        <div
+          role="alert"
+          data-testid="erro-cadastro"
+          class="flex items-start gap-2.5 rounded-[10px] border border-rose-200 bg-rose-50 px-3.5 py-3 text-sm leading-snug text-rose-800"
+        >
+          <span class="mt-px"><app-icone nome="alerta-circulo" /></span>
+          <span>{{ erro() }}</span>
+        </div>
+      }
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="cadastrar()"
+        novalidate
+        class="flex flex-col gap-[18px]"
+      >
+        <div class="flex flex-col gap-1.5">
+          <label for="nome" class="text-sm font-semibold text-slate-700">Nome completo</label>
+          <input
+            id="nome"
+            type="text"
+            maxlength="100"
+            formControlName="nome"
+            autocomplete="name"
+            placeholder="ex: Carlos Silva"
+            class="box-border h-11 rounded-lg border bg-white px-3.5 text-[15px]"
+            [class]="
+              form.controls.nome.touched && form.controls.nome.invalid
+                ? 'border-rose-600'
+                : 'border-slate-300'
+            "
+          />
+          @if (form.controls.nome.touched && form.controls.nome.hasError('required')) {
+            <span class="text-[13px] text-rose-700">O nome é obrigatório.</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="login" class="text-sm font-semibold text-slate-700">Login ou E-mail</label>
+          <input
+            id="login"
+            type="text"
+            maxlength="100"
+            formControlName="login"
+            autocomplete="username"
+            placeholder="ex: carlos.mecanica"
+            class="box-border h-11 rounded-lg border bg-white px-3.5 text-[15px]"
+            [class]="
+              form.controls.login.touched && form.controls.login.invalid
+                ? 'border-rose-600'
+                : 'border-slate-300'
+            "
+          />
+          @if (form.controls.login.touched && form.controls.login.hasError('required')) {
+            <span class="text-[13px] text-rose-700">O login é obrigatório.</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="senha" class="text-sm font-semibold text-slate-700">Senha</label>
+          <input
+            id="senha"
+            type="password"
+            formControlName="senha"
+            autocomplete="new-password"
+            class="box-border h-11 rounded-lg border bg-white px-3.5 text-[15px]"
+            [class]="
+              form.controls.senha.touched && form.controls.senha.invalid
+                ? 'border-rose-600'
+                : 'border-slate-300'
+            "
+          />
+          @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
+            <span class="text-[13px] text-rose-700">A senha é obrigatória.</span>
+          } @else if (form.controls.senha.touched && form.controls.senha.hasError('minlength')) {
+            <span class="text-[13px] text-rose-700">A senha deve ter no mínimo 6 caracteres.</span>
+          } @else {
+            <span class="text-[13px] text-slate-500">Mínimo de 6 caracteres</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="confirmarSenha" class="text-sm font-semibold text-slate-700">
+            Confirmar senha
+          </label>
+          <input
+            id="confirmarSenha"
+            type="password"
+            formControlName="confirmarSenha"
+            autocomplete="new-password"
+            class="box-border h-11 rounded-lg border bg-white px-3.5 text-[15px]"
+            [class]="
+              form.controls.confirmarSenha.touched && form.hasError('senhasDiferentes')
+                ? 'border-rose-600'
+                : 'border-slate-300'
+            "
+          />
+          @if (form.controls.confirmarSenha.touched && form.hasError('senhasDiferentes')) {
+            <span class="text-[13px] text-rose-700">As senhas não conferem.</span>
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="enviando()"
+          class="mt-1.5 flex h-[46px] cursor-pointer items-center justify-center gap-2.5 rounded-lg border-0 bg-sky-700 text-[15px] font-semibold text-white hover:bg-sky-800 disabled:cursor-not-allowed disabled:bg-slate-500"
+        >
+          @if (enviando()) {
+            <span
+              aria-hidden="true"
+              class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            ></span>
+          }
+          <span>{{ enviando() ? 'Cadastrando...' : 'Cadastrar' }}</span>
+        </button>
+      </form>
+    </section>
+    <p class="m-0 text-center text-sm text-slate-600">
+      Já possui uma conta?
+      <a routerLink="/login" class="font-semibold text-sky-700 hover:text-sky-800">Fazer Login</a>
     </p>
-  </form>
-</div>
+  </div>
+</main>
