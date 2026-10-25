@@ -9,9 +9,7 @@
           <app-icone nome="ferramenta" [tamanho]="28" />
         </div>
         <div class="flex flex-col gap-1">
-          <h1 id="titulo-cadastro" class="m-0 text-2xl font-bold tracking-tight">
-            Criar conta
-          </h1>
+          <h1 id="titulo-cadastro" class="m-0 text-2xl font-bold tracking-tight">Criar conta</h1>
           <p class="m-0 text-[15px] text-slate-600">Cadastre um novo operador no ERP</p>
         </div>
       </header>
@@ -27,12 +25,7 @@
         </div>
       }
 
-      <form
-        [formGroup]="form"
-        (ngSubmit)="cadastrar()"
-        novalidate
-        class="flex flex-col gap-[18px]"
-      >
+      <form [formGroup]="form" (ngSubmit)="cadastrar()" novalidate class="flex flex-col gap-[18px]">
         <div class="flex flex-col gap-1.5">
           <label for="nome" class="text-sm font-semibold text-slate-700">Nome completo</label>
           <input

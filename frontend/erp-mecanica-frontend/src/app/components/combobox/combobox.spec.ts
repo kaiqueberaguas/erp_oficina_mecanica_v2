@@ -2,8 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Combobox, OpcaoCombobox } from './combobox';
 
 const opcoes: OpcaoCombobox[] = [
-  { id: 1, rotulo: 'Ana Souza', busca: 'Ana Souza 529.982.247-25', principal: 'Ana Souza', terciario: '529.982.247-25' },
-  { id: 2, rotulo: 'ABC-1234 - Fiat Argo', busca: 'ABC1234 Fiat Argo', principal: 'ABC-1234', secundario: 'Fiat Argo', mono: true },
+  {
+    id: 1,
+    rotulo: 'Ana Souza',
+    busca: 'Ana Souza 529.982.247-25',
+    principal: 'Ana Souza',
+    terciario: '529.982.247-25',
+  },
+  {
+    id: 2,
+    rotulo: 'ABC-1234 - Fiat Argo',
+    busca: 'ABC1234 Fiat Argo',
+    principal: 'ABC-1234',
+    secundario: 'Fiat Argo',
+    mono: true,
+  },
 ];
 
 describe('Combobox', () => {

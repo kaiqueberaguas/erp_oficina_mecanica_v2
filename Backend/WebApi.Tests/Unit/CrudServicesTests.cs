@@ -291,7 +291,10 @@ public class OrdemServicoServiceTests
         var o1 = await _service.CriarAsync(Param(carro1));
         await _service.CriarAsync(new OrdemServicoParameter
         {
-            CarroId = carro2, DescricaoOrdem = "x", ValorServico = 1, DataEntradaCarro = new DateOnly(2020, 5, 1),
+            CarroId = carro2,
+            DescricaoOrdem = "x",
+            ValorServico = 1,
+            DataEntradaCarro = new DateOnly(2020, 5, 1),
         });
         await _service.AtualizarEtapaAsync(o1.Id, Etapa(EtapaOrdem.Inicio));
 

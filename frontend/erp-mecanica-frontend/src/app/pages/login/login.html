@@ -25,12 +25,7 @@
         </div>
       }
 
-      <form
-        [formGroup]="form"
-        (ngSubmit)="entrar()"
-        novalidate
-        class="flex flex-col gap-[18px]"
-      >
+      <form [formGroup]="form" (ngSubmit)="entrar()" novalidate class="flex flex-col gap-[18px]">
         <div class="flex flex-col gap-1.5">
           <label for="login" class="text-sm font-semibold text-slate-700">Login ou E-mail</label>
           <input
@@ -99,7 +94,9 @@
     </section>
     <p class="m-0 text-center text-sm text-slate-600">
       Não possui cadastro?
-      <a routerLink="/cadastro" class="font-semibold text-sky-700 hover:text-sky-800">Cadastre-se</a>
+      <a routerLink="/cadastro" class="font-semibold text-sky-700 hover:text-sky-800"
+        >Cadastre-se</a
+      >
     </p>
   </div>
 </main>

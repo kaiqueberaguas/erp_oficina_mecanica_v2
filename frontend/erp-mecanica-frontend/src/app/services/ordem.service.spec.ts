@@ -6,14 +6,21 @@ import { EtapaOrdem } from '../models/ordem';
 import { OrdemService } from './ordem.service';
 
 const url = `${environment.apiUrl}/ordens`;
-const dados = { carroId: 2, descricaoOrdem: 'Troca de óleo', valorServico: 150, dataEntradaCarro: '2026-10-01' };
+const dados = {
+  carroId: 2,
+  descricaoOrdem: 'Troca de óleo',
+  valorServico: 150,
+  dataEntradaCarro: '2026-10-01',
+};
 
 describe('OrdemService', () => {
   let service: OrdemService;
   let http: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     service = TestBed.inject(OrdemService);
     http = TestBed.inject(HttpTestingController);
   });

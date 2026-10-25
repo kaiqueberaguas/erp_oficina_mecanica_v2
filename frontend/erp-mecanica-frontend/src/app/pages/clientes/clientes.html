@@ -26,36 +26,60 @@
   </button>
 </div>
 
-<section aria-label="Lista de clientes" class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+<section
+  aria-label="Lista de clientes"
+  class="overflow-hidden rounded-xl border border-slate-200 bg-white"
+>
   @if (lista.erro()) {
-    <div role="alert" class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-sm text-rose-800">
+    <div
+      role="alert"
+      class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-sm text-rose-800"
+    >
       <span>{{ lista.erro() }}</span>
-      <button type="button" (click)="lista.carregar()" class="h-9 cursor-pointer rounded-lg border border-rose-300 bg-white px-3 font-medium hover:bg-rose-50">Tentar novamente</button>
+      <button
+        type="button"
+        (click)="lista.carregar()"
+        class="h-9 cursor-pointer rounded-lg border border-rose-300 bg-white px-3 font-medium hover:bg-rose-50"
+      >
+        Tentar novamente
+      </button>
     </div>
   } @else if (lista.itens().length > 0) {
     <div class="overflow-x-auto">
       <table class="w-full min-w-[920px] border-collapse text-sm">
         <thead class="bg-slate-50">
           <tr class="text-left text-xs tracking-wider text-slate-600 uppercase">
-            <th scope="col" class="h-11 w-[72px] border-b border-slate-200 pr-3 pl-5 font-semibold">ID</th>
-            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Nome do Cliente</th>
+            <th scope="col" class="h-11 w-[72px] border-b border-slate-200 pr-3 pl-5 font-semibold">
+              ID
+            </th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">
+              Nome do Cliente
+            </th>
             <th scope="col" class="border-b border-slate-200 px-3 font-semibold">CPF</th>
             <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Contato</th>
-            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">Veículos Vinculados</th>
-            <th scope="col" class="border-b border-slate-200 pr-5 pl-3 text-right font-semibold">Ações</th>
+            <th scope="col" class="border-b border-slate-200 px-3 font-semibold">
+              Veículos Vinculados
+            </th>
+            <th scope="col" class="border-b border-slate-200 pr-5 pl-3 text-right font-semibold">
+              Ações
+            </th>
           </tr>
         </thead>
         <tbody>
           @for (cliente of lista.itens(); track cliente.id) {
             <tr class="border-b border-slate-100">
-              <td class="h-[60px] pr-3 pl-5 text-slate-600 tabular-nums">{{ idFormatado(cliente.id) }}</td>
+              <td class="h-[60px] pr-3 pl-5 text-slate-600 tabular-nums">
+                {{ idFormatado(cliente.id) }}
+              </td>
               <td class="px-3 font-semibold">{{ cliente.nome }}</td>
               <td class="px-3 text-slate-700 tabular-nums">{{ maskCpf(cliente.cpf) }}</td>
               <td class="px-3 text-slate-700">{{ cliente.contato }}</td>
               <td class="px-3">
                 <span
                   class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[13px] font-semibold"
-                  [class]="cliente.totalCarros ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-600'"
+                  [class]="
+                    cliente.totalCarros ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-600'
+                  "
                   >{{ rotuloVeiculos(cliente) }}</span
                 >
               </td>
@@ -102,10 +126,14 @@
       (paginaChange)="lista.carregar($event)"
     />
   } @else if (lista.carregando()) {
-    <p class="m-0 px-6 py-16 text-center text-sm text-slate-600" role="status">Carregando clientes...</p>
+    <p class="m-0 px-6 py-16 text-center text-sm text-slate-600" role="status">
+      Carregando clientes...
+    </p>
   } @else {
     <div class="flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span class="flex size-[72px] items-center justify-center rounded-full bg-slate-100 text-slate-500">
+      <span
+        class="flex size-[72px] items-center justify-center rounded-full bg-slate-100 text-slate-500"
+      >
         <app-icone nome="usuarios" [tamanho]="34" [espessura]="1.75" />
       </span>
       <h2 class="m-0 text-lg font-semibold">Nenhum cliente encontrado</h2>
@@ -113,56 +141,115 @@
         Tente buscar por outro nome ou CPF, ou cadastre um novo cliente.
       </p>
       <div class="mt-1 flex flex-wrap justify-center gap-2">
-        <button type="button" (click)="limparBusca()" class="h-10 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-50">Limpar busca</button>
-        <button type="button" (click)="novoCliente()" class="h-10 cursor-pointer rounded-lg bg-sky-700 px-4 text-sm font-semibold text-white hover:bg-sky-800">+ Novo Cliente</button>
+        <button
+          type="button"
+          (click)="limparBusca()"
+          class="h-10 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-50"
+        >
+          Limpar busca
+        </button>
+        <button
+          type="button"
+          (click)="novoCliente()"
+          class="h-10 cursor-pointer rounded-lg bg-sky-700 px-4 text-sm font-semibold text-white hover:bg-sky-800"
+        >
+          + Novo Cliente
+        </button>
       </div>
     </div>
   }
 </section>
 
 @if (mostrarModalForm()) {
-  <app-modal-dialog [titulo]="editando() ? 'Editar Cliente' : 'Cadastrar Novo Cliente'" (fechar)="fecharForm()">
+  <app-modal-dialog
+    [titulo]="editando() ? 'Editar Cliente' : 'Cadastrar Novo Cliente'"
+    (fechar)="fecharForm()"
+  >
     <form (ngSubmit)="salvarCliente()" novalidate class="flex flex-col gap-4 px-6 pt-[22px] pb-6">
       <div class="flex flex-col gap-1.5">
-        <label for="c-nome" class="text-sm font-semibold text-slate-700">Nome <span class="text-rose-700">*</span></label>
+        <label for="c-nome" class="text-sm font-semibold text-slate-700"
+          >Nome <span class="text-rose-700">*</span></label
+        >
         <input
-          id="c-nome" name="nome" type="text" maxlength="100" placeholder="ex: Mariana Souza"
-          [ngModel]="form().nome" (ngModelChange)="aoDigitar('nome', $event)"
+          id="c-nome"
+          name="nome"
+          type="text"
+          maxlength="100"
+          placeholder="ex: Mariana Souza"
+          [ngModel]="form().nome"
+          (ngModelChange)="aoDigitar('nome', $event)"
           class="box-border h-11 rounded-lg border px-3.5 text-[15px]"
+          [attr.aria-invalid]="erro('nome') ? 'true' : null"
+          [attr.aria-describedby]="erro('nome') ? 'c-nome-erro' : null"
           [class]="erro('nome') ? 'border-rose-600' : 'border-slate-300'"
         />
-        @if (erro('nome')) { <span class="text-[13px] text-rose-700">{{ erro('nome') }}</span> }
+        @if (erro('nome')) {
+          <span id="c-nome-erro" class="text-[13px] text-rose-700">{{ erro('nome') }}</span>
+        }
       </div>
-      <div class="grid grid-cols-2 gap-3.5">
+      <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         <div class="flex min-w-0 flex-col gap-1.5">
-          <label for="c-cpf" class="text-sm font-semibold text-slate-700">CPF <span class="text-rose-700">*</span></label>
+          <label for="c-cpf" class="text-sm font-semibold text-slate-700"
+            >CPF <span class="text-rose-700">*</span></label
+          >
           <input
-            id="c-cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00"
-            [ngModel]="form().cpf" (ngModelChange)="aoDigitar('cpf', $event)"
+            id="c-cpf"
+            name="cpf"
+            type="text"
+            inputmode="numeric"
+            placeholder="000.000.000-00"
+            [ngModel]="form().cpf"
+            (ngModelChange)="aoDigitar('cpf', $event)"
             class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px] tabular-nums"
+            [attr.aria-invalid]="erro('cpf') ? 'true' : null"
+            [attr.aria-describedby]="erro('cpf') ? 'c-cpf-erro' : null"
             [class]="erro('cpf') ? 'border-rose-600' : 'border-slate-300'"
           />
-          @if (erro('cpf')) { <span class="text-[13px] text-rose-700">{{ erro('cpf') }}</span> }
+          @if (erro('cpf')) {
+            <span id="c-cpf-erro" class="text-[13px] text-rose-700">{{ erro('cpf') }}</span>
+          }
         </div>
         <div class="flex min-w-0 flex-col gap-1.5">
-          <label for="c-contato" class="text-sm font-semibold text-slate-700">Contato <span class="text-rose-700">*</span></label>
+          <label for="c-contato" class="text-sm font-semibold text-slate-700"
+            >Contato <span class="text-rose-700">*</span></label
+          >
           <input
-            id="c-contato" name="contato" type="text" maxlength="20" placeholder="(99) 99999-9999 ou e-mail"
-            [ngModel]="form().contato" (ngModelChange)="aoDigitar('contato', $event)"
+            id="c-contato"
+            name="contato"
+            type="text"
+            maxlength="20"
+            placeholder="(99) 99999-9999 ou e-mail"
+            [ngModel]="form().contato"
+            (ngModelChange)="aoDigitar('contato', $event)"
             class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px]"
+            [attr.aria-invalid]="erro('contato') ? 'true' : null"
+            [attr.aria-describedby]="erro('contato') ? 'c-contato-erro' : null"
             [class]="erro('contato') ? 'border-rose-600' : 'border-slate-300'"
           />
-          @if (erro('contato')) { <span class="text-[13px] text-rose-700">{{ erro('contato') }}</span> }
+          @if (erro('contato')) {
+            <span id="c-contato-erro" class="text-[13px] text-rose-700">{{ erro('contato') }}</span>
+          }
         </div>
       </div>
-      @if (erroApi()) { <span role="alert" class="text-[13px] text-rose-700">{{ erroApi() }}</span> }
+      @if (erroApi()) {
+        <span role="alert" class="text-[13px] text-rose-700">{{ erroApi() }}</span>
+      }
       <div class="mt-2 flex justify-end gap-2.5">
-        <button type="button" (click)="fecharForm()" class="h-11 cursor-pointer rounded-lg border border-slate-300 bg-white px-[18px] text-[15px] font-medium hover:bg-slate-50">Cancelar</button>
         <button
-          type="submit" [disabled]="salvando()"
+          type="button"
+          (click)="fecharForm()"
+          class="h-11 cursor-pointer rounded-lg border border-slate-300 bg-white px-[18px] text-[15px] font-medium hover:bg-slate-50"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="salvando()"
           class="h-11 cursor-pointer rounded-lg px-[18px] text-[15px] font-semibold text-white"
           [class]="salvando() ? 'bg-slate-500' : 'bg-sky-700 hover:bg-sky-800'"
-        >{{ salvando() ? 'Salvando...' : 'Salvar Cliente' }}</button>
+        >
+          {{ salvando() ? 'Salvando...' : 'Salvar Cliente' }}
+        </button>
       </div>
     </form>
   </app-modal-dialog>
@@ -179,8 +266,8 @@
     </span>
     <span aviso>
       <strong>Atenção:</strong> A exclusão deste cliente removerá permanentemente todos os veículos
-      associados e o histórico de ordens de serviço vinculadas (exclusão em cascata). Tem certeza que
-      deseja prosseguir?
+      associados e o histórico de ordens de serviço vinculadas (exclusão em cascata). Tem certeza
+      que deseja prosseguir?
     </span>
   </app-confirm-delete-modal>
 }

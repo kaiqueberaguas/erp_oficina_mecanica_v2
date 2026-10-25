@@ -8,6 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:cov": "ng test --watch=false --coverage",
+    "lint": "prettier --check \"src/**/*.{ts,html,css}\"",
+    "format": "prettier --write \"src/**/*.{ts,html,css}\"",
     "e2e": "cypress run",
     "cypress:open": "cypress open"
   },

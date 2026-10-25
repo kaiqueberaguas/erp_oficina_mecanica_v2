@@ -1,16 +1,18 @@
 import { Component, HostListener, input, output } from '@angular/core';
+import { FocusTrap } from '../focus-trap';
 import { Icone } from '../icone';
 
 @Component({
   selector: 'app-confirm-delete-modal',
   standalone: true,
-  imports: [Icone],
+  imports: [Icone, FocusTrap],
   template: `
     <div
-      class="fixed inset-0 z-20 flex items-start justify-center overflow-y-auto bg-slate-900/50 px-4 pt-[140px] pb-10 backdrop-blur-[3px]"
+      class="fixed inset-0 z-20 flex items-start justify-center overflow-y-auto bg-slate-900/50 px-4 pt-8 pb-10 sm:pt-[140px] backdrop-blur-[3px]"
       (mousedown)="aoClicarFundo($event)"
     >
       <div
+        appFocusTrap
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="del-titulo"

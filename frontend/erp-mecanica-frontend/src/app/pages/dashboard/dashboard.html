@@ -1,160 +1,213 @@
-<div class="flex flex-wrap items-end justify-between gap-4">
-  <div class="flex flex-col gap-1">
-    <h1 class="m-0 text-[28px] font-bold tracking-tight">Visão Geral da Oficina</h1>
-    <p class="m-0 text-[15px] text-slate-600">Indicadores operacionais e financeiros em tempo real</p>
-  </div>
-  <div role="group" aria-label="Período" class="flex flex-wrap gap-1 rounded-[10px] bg-slate-200 p-1">
-    @for (p of periodos; track p.id) {
-      <button
-        type="button"
-        (click)="periodo.set(p.id)"
-        [attr.aria-pressed]="periodo() === p.id"
-        class="min-h-10 cursor-pointer rounded-[7px] border-0 px-4 text-sm"
-        [class]="
-          periodo() === p.id
-            ? 'bg-white font-semibold text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.12)]'
-            : 'bg-transparent font-medium text-slate-600'
-        "
-      >{{ p.rotulo }}</button>
-    }
-  </div>
+<div class="flex flex-col gap-1">
+  <h1 class="m-0 text-[28px] font-bold tracking-tight">Visão Geral da Oficina</h1>
+  <p class="m-0 text-[15px] text-slate-600">Indicadores operacionais e financeiros em tempo real</p>
 </div>
 
-<section aria-label="Indicadores principais" class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4">
-  <app-kpi-card titulo="Faturamento Total" [valor]="kpi().faturamento" detalhe="Soma das OSs finalizadas" icone="dinheiro" corIcone="bg-emerald-50 text-emerald-700" />
-  <app-kpi-card titulo="Ticket Médio" [valor]="kpi().ticket" detalhe="Média por ordem concluída" icone="tendencia" corIcone="bg-sky-50 text-sky-700" />
-  <app-kpi-card titulo="Lead Time Médio" [valor]="kpi().lead" detalhe="Tempo médio entrada → conclusão" icone="relogio" corIcone="bg-orange-50 text-orange-700" />
-  <app-kpi-card titulo="Total de Ordens" [valor]="total() + ' OS'" icone="prancheta" corIcone="bg-slate-100 text-slate-700">
-    <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
-      <span class="rounded-full bg-amber-100 px-2 py-0.5 text-amber-800">{{ dados().abertas }} abertas</span>
-      <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-800">{{ dados().finalizadas }} finalizadas</span>
-      <span class="rounded-full bg-rose-100 px-2 py-0.5 text-rose-800">{{ dados().canceladas }} canceladas</span>
-    </div>
-  </app-kpi-card>
-</section>
+@if (carregando()) {
+  <p role="status" class="m-0 text-slate-600">Carregando indicadores...</p>
+} @else if (erro()) {
+  <p role="alert" class="m-0 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-800">{{ erro() }}</p>
+} @else {
+  @if (vazio()) {
+    <p role="status" class="m-0 rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-700">
+      Nenhum dado cadastrado ainda. Abra ordens de serviço para ver os indicadores.
+    </p>
+  }
 
-<div class="flex flex-wrap gap-4">
-  <section aria-labelledby="g1" class="flex min-w-0 flex-[2_1_600px] flex-col gap-[18px] rounded-xl border border-slate-200 bg-white px-[22px] pt-[22px] pb-[18px]">
-    <div class="flex flex-wrap items-baseline justify-between gap-3">
-      <h2 id="g1" class="m-0 text-base font-semibold">Evolução Financeira Mensal</h2>
-      <div class="flex gap-4 text-[13px] text-slate-600">
-        <span class="flex items-center gap-1.5"><span class="size-3 rounded-[3px] bg-sky-700"></span>Faturamento (R$)</span>
-        <span class="flex items-center gap-1.5"><span class="h-[3px] w-4 rounded-sm bg-orange-600"></span>Qtd. de ordens</span>
+  <section
+    aria-label="Indicadores principais"
+    class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4"
+  >
+    <app-kpi-card
+      titulo="Faturamento Total"
+      [valor]="kpi().faturamento"
+      detalhe="Soma das OSs finalizadas"
+      icone="dinheiro"
+      corIcone="bg-emerald-50 text-emerald-700"
+    />
+    <app-kpi-card
+      titulo="Ticket Médio"
+      [valor]="kpi().ticket"
+      detalhe="Média por ordem concluída"
+      icone="tendencia"
+      corIcone="bg-sky-50 text-sky-700"
+    />
+    <app-kpi-card
+      titulo="Lead Time Médio"
+      [valor]="kpi().lead"
+      detalhe="Tempo médio entrada → conclusão"
+      icone="relogio"
+      corIcone="bg-orange-50 text-orange-700"
+    />
+    <app-kpi-card
+      titulo="Total de Ordens"
+      [valor]="total() + ' OS'"
+      icone="prancheta"
+      corIcone="bg-slate-100 text-slate-700"
+    >
+      <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-amber-800"
+          >{{ resumo().abertas }} abertas</span
+        >
+        <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-800"
+          >{{ resumo().finalizadas }} finalizadas</span
+        >
+        <span class="rounded-full bg-rose-100 px-2 py-0.5 text-rose-800"
+          >{{ resumo().canceladas }} canceladas</span
+        >
       </div>
-    </div>
-    <div class="overflow-x-auto">
-      <div class="flex min-w-[560px] gap-2.5">
-        <div class="flex h-60 w-11 flex-none flex-col justify-between text-right text-xs text-slate-500">
-          @for (r of eixoFaturamento; track r) { <span>{{ r }}</span> }
+    </app-kpi-card>
+  </section>
+
+  @if (!vazio()) {
+    <div class="flex flex-wrap gap-4">
+      <section
+        aria-labelledby="g1"
+        class="flex min-w-0 flex-[2_1_600px] flex-col gap-[18px] rounded-xl border border-slate-200 bg-white px-[22px] pt-[22px] pb-[18px]"
+      >
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="g1" class="m-0 text-base font-semibold">Evolução Financeira Mensal</h2>
+          <div class="flex gap-4 text-[13px] text-slate-600">
+            <span class="flex items-center gap-1.5"
+              ><span class="size-3 rounded-[3px] bg-sky-700"></span>Faturamento (R$)</span
+            >
+            <span class="flex items-center gap-1.5"
+              ><span class="h-[3px] w-4 rounded-sm bg-orange-600"></span>Qtd. de ordens</span
+            >
+          </div>
         </div>
-        <div class="flex min-w-0 flex-1 flex-col gap-2">
-          <div
-            role="img"
-            [attr.aria-label]="descricaoGrafico"
-            class="relative h-60 border-b border-slate-300 bg-[repeating-linear-gradient(to_bottom,#f1f5f9_0,#f1f5f9_1px,transparent_1px,transparent_60px)]"
-          >
-            <div class="absolute inset-0 flex">
-              @for (m of meses(); track m.rotulo) {
-                <div class="flex h-full flex-1 items-end justify-center">
-                  <div
-                    [title]="m.dica"
-                    class="w-[56%] max-w-10 rounded-t"
-                    [class]="m.destacado ? 'bg-sky-700' : 'bg-slate-300'"
-                    [style.height]="m.altura"
-                  ></div>
+        @if (meses().length === 0) {
+          <p class="m-0 text-sm text-slate-500">Nenhuma ordem finalizada ainda.</p>
+        } @else {
+          <div class="overflow-x-auto">
+            <div class="flex min-w-[560px] gap-2.5">
+              <div
+                class="flex h-60 w-11 flex-none flex-col justify-between text-right text-xs text-slate-500"
+              >
+                @for (r of eixoFaturamento(); track $index) {
+                  <span>{{ r }}</span>
+                }
+              </div>
+              <div class="flex min-w-0 flex-1 flex-col gap-2">
+                <div
+                  role="img"
+                  [attr.aria-label]="descricaoGrafico()"
+                  class="relative h-60 border-b border-slate-300 bg-[repeating-linear-gradient(to_bottom,#f1f5f9_0,#f1f5f9_1px,transparent_1px,transparent_60px)]"
+                >
+                  <div class="absolute inset-0 flex">
+                    @for (m of meses(); track m.rotulo) {
+                      <div class="flex h-full flex-1 items-end justify-center">
+                        <div
+                          [title]="m.dica"
+                          class="w-[56%] max-w-10 rounded-t bg-sky-700"
+                          [style.height]="m.altura"
+                        ></div>
+                      </div>
+                    }
+                  </div>
+                  <svg
+                    viewBox="0 0 1000 240"
+                    preserveAspectRatio="none"
+                    class="absolute inset-0 size-full overflow-visible"
+                  >
+                    <polyline
+                      [attr.points]="pontosLinha()"
+                      fill="none"
+                      stroke="#ea580c"
+                      stroke-width="2.5"
+                      stroke-linejoin="round"
+                      vector-effect="non-scaling-stroke"
+                    />
+                  </svg>
+                  @for (m of meses(); track m.rotulo) {
+                    <span
+                      class="absolute box-border size-2.5 rounded-full border-2 border-orange-600 bg-white"
+                      [style.left]="m.x"
+                      [style.bottom]="m.y"
+                      style="margin: 0 0 -5px -5px"
+                    ></span>
+                  }
                 </div>
-              }
+                <div class="flex text-xs text-slate-600">
+                  @for (m of meses(); track m.rotulo) {
+                    <span class="flex-1 text-center">{{ m.rotulo }}</span>
+                  }
+                </div>
+              </div>
+              <div class="flex h-60 w-8 flex-none flex-col justify-between text-xs text-orange-700">
+                @for (r of eixoOrdens(); track $index) {
+                  <span>{{ r }}</span>
+                }
+              </div>
             </div>
-            <svg viewBox="0 0 1000 240" preserveAspectRatio="none" class="absolute inset-0 size-full overflow-visible">
-              <polyline [attr.points]="pontosLinha" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+          </div>
+        }
+      </section>
+
+      <section
+        aria-labelledby="g2"
+        class="flex min-w-0 flex-[1_1_320px] flex-col gap-[18px] rounded-xl border border-slate-200 bg-white p-[22px]"
+      >
+        <h2 id="g2" class="m-0 text-base font-semibold">Distribuição por Status</h2>
+        <div class="flex justify-center">
+          <div class="relative size-[180px]">
+            <svg
+              role="img"
+              [attr.aria-label]="descricaoRosca()"
+              width="180"
+              height="180"
+              viewBox="0 0 180 180"
+            >
+              <circle cx="90" cy="90" r="66" fill="none" stroke="#f1f5f9" stroke-width="24" />
+              @for (f of rosca(); track f.rotulo) {
+                <circle
+                  cx="90"
+                  cy="90"
+                  r="66"
+                  fill="none"
+                  [attr.stroke]="f.cor"
+                  stroke-width="24"
+                  [attr.stroke-dasharray]="f.dash"
+                  [attr.stroke-dashoffset]="f.deslocamento"
+                  transform="rotate(-90 90 90)"
+                />
+              }
             </svg>
-            @for (m of meses(); track m.rotulo) {
-              <span
-                class="absolute box-border size-2.5 rounded-full border-2 border-orange-600 bg-white"
-                [style.left]="m.x" [style.bottom]="m.y" style="margin: 0 0 -5px -5px"
-              ></span>
-            }
-          </div>
-          <div class="flex text-xs text-slate-600">
-            @for (m of meses(); track m.rotulo) {
-              <span class="flex-1 text-center" [class]="m.destacado ? 'font-semibold' : 'font-normal'">{{ m.rotulo }}</span>
-            }
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="text-[28px] font-bold">{{ total() }}</span>
+              <span class="text-xs text-slate-500">ordens</span>
+            </div>
           </div>
         </div>
-        <div class="flex h-60 w-8 flex-none flex-col justify-between text-xs text-orange-700">
-          @for (r of eixoOrdens; track r) { <span>{{ r }}</span> }
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section aria-labelledby="g2" class="flex min-w-0 flex-[1_1_320px] flex-col gap-[18px] rounded-xl border border-slate-200 bg-white p-[22px]">
-    <h2 id="g2" class="m-0 text-base font-semibold">Distribuição por Status</h2>
-    <div class="flex justify-center">
-      <div class="relative size-[180px]">
-        <svg role="img" [attr.aria-label]="descricaoRosca()" width="180" height="180" viewBox="0 0 180 180">
-          <circle cx="90" cy="90" r="66" fill="none" stroke="#f1f5f9" stroke-width="24" />
+        <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
           @for (f of rosca(); track f.rotulo) {
-            <circle cx="90" cy="90" r="66" fill="none" [attr.stroke]="f.cor" stroke-width="24" [attr.stroke-dasharray]="f.dash" [attr.stroke-dashoffset]="f.deslocamento" transform="rotate(-90 90 90)" />
+            <li class="flex items-center gap-2.5 text-sm">
+              <span class="size-3 flex-none rounded-[3px]" [class]="f.corClasse"></span>
+              <span class="flex-1">{{ f.rotulo }}</span>
+              <span class="font-semibold">{{ f.qtd }}</span>
+              <span class="w-[52px] text-right text-slate-600">{{ f.pct }}</span>
+            </li>
           }
-        </svg>
-        <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span class="text-[28px] font-bold">{{ total() }}</span>
-          <span class="text-xs text-slate-500">ordens</span>
-        </div>
-      </div>
+        </ul>
+      </section>
     </div>
-    <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
-      @for (f of rosca(); track f.rotulo) {
-        <li class="flex items-center gap-2.5 text-sm">
-          <span class="size-3 flex-none rounded-[3px]" [class]="f.corClasse"></span>
-          <span class="flex-1">{{ f.rotulo }}</span>
-          <span class="font-semibold">{{ f.qtd }}</span>
-          <span class="w-[52px] text-right text-slate-600">{{ f.pct }}</span>
-        </li>
-      }
-    </ul>
-  </section>
-</div>
 
-<div class="flex flex-wrap gap-4">
-  <section aria-labelledby="g3" class="flex min-w-0 flex-[1_1_440px] flex-col gap-[18px] rounded-xl border border-slate-200 bg-white p-[22px]">
-    <h2 id="g3" class="m-0 text-base font-semibold">Top 5 Marcas Atendidas</h2>
-    <ol class="m-0 flex list-none flex-col gap-3.5 p-0">
-      @for (mc of marcas(); track mc.nome) {
-        <li class="grid grid-cols-[96px_minmax(0,1fr)_64px] items-center gap-3 text-sm">
-          <span class="font-medium">{{ mc.nome }}</span>
-          <span class="h-3.5 overflow-hidden rounded bg-slate-100">
-            <span class="block h-full rounded bg-sky-700" [style.width]="mc.largura"></span>
-          </span>
-          <span class="text-right font-semibold text-slate-700">{{ mc.qtd }} OS</span>
-        </li>
-      }
-    </ol>
-  </section>
-
-  <section aria-labelledby="g4" class="flex min-w-0 flex-[1_1_440px] flex-col gap-4 rounded-xl border border-slate-200 bg-white p-[22px]">
-    <div class="flex items-start gap-3.5">
-      <span class="flex size-11 flex-none items-center justify-center rounded-full bg-violet-50 text-violet-700">
-        <app-icone nome="ampulheta" [tamanho]="22" />
-      </span>
-      <div class="flex flex-col gap-1">
-        <h2 id="g4" class="m-0 text-base font-semibold">Tempo Médio no Pátio pós-conserto</h2>
-        <p class="m-0 text-[13px] text-slate-500">Dias entre o fim do serviço e a retirada pelo cliente</p>
-      </div>
-      <span class="ml-auto text-[26px] font-bold whitespace-nowrap">{{ kpi().patio }}</span>
-    </div>
-    <div class="flex flex-col gap-2.5 border-t border-slate-200 pt-3.5">
-      <h3 class="m-0 text-[13px] font-semibold tracking-wider text-slate-600 uppercase">Aguardando retirada</h3>
-      <ul class="m-0 flex list-none flex-col gap-2 p-0">
-        @for (pt of patio; track pt.placa) {
-          <li class="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg px-3 py-2.5 text-sm" [class]="pt.alerta ? 'bg-orange-50' : 'bg-slate-50'">
-            <span class="rounded border border-slate-400 bg-white px-1.5 py-0.5 font-mono text-[13px] font-semibold">{{ pt.placa }}</span>
-            <span class="min-w-[140px] flex-1">{{ pt.carro }} · <span class="text-slate-600">{{ pt.cliente }}</span></span>
-            <span class="font-semibold" [class]="pt.alerta ? 'text-orange-700' : 'text-slate-700'">{{ pt.dias }}</span>
+    <section
+      aria-labelledby="g3"
+      class="flex min-w-0 flex-col gap-[18px] rounded-xl border border-slate-200 bg-white p-[22px]"
+    >
+      <h2 id="g3" class="m-0 text-base font-semibold">Top 5 Marcas Atendidas</h2>
+      <ol class="m-0 flex list-none flex-col gap-3.5 p-0">
+        @for (mc of marcas(); track mc.nome) {
+          <li class="grid grid-cols-[96px_minmax(0,1fr)_64px] items-center gap-3 text-sm">
+            <span class="font-medium">{{ mc.nome }}</span>
+            <span class="h-3.5 overflow-hidden rounded bg-slate-100">
+              <span class="block h-full rounded bg-sky-700" [style.width]="mc.largura"></span>
+            </span>
+            <span class="text-right font-semibold text-slate-700">{{ mc.qtd }} OS</span>
           </li>
         }
-      </ul>
-    </div>
-  </section>
-</div>
+      </ol>
+    </section>
+  }
+}

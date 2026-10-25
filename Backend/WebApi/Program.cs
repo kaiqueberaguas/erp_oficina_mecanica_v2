@@ -29,6 +29,7 @@ public class Program
         builder.Services.AddScoped<IClienteService, ClienteService>();
         builder.Services.AddScoped<ICarroService, CarroService>();
         builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
+        builder.Services.AddScoped<IDashboardService, DashboardService>();
 
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -69,7 +70,7 @@ public class Program
 
         var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("Docs:Enabled"))
         {
             app.MapOpenApi();
             app.MapScalarApiReference();

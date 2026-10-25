@@ -69,7 +69,7 @@
           "options": {
             "coverageInclude": [
               "src/app/models/**/*.ts",
-              "src/app/services/{cliente,carro,ordem}.service.ts",
+              "src/app/services/{cliente,carro,ordem,dashboard}.service.ts",
               "src/app/utils/{erro-api,lista-paginada}.ts",
               "src/app/components/{paginacao,status-badge,combobox}/*.ts",
               "src/app/pages/{clientes,carros,ordens}/*.ts"

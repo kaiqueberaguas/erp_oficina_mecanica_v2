@@ -1,4 +1,5 @@
 import { Component, HostListener, input, output } from '@angular/core';
+import { FocusTrap } from '../focus-trap';
 import { Icone } from '../icone';
 
 let proximoId = 0;
@@ -6,7 +7,7 @@ let proximoId = 0;
 @Component({
   selector: 'app-modal-dialog',
   standalone: true,
-  imports: [Icone],
+  imports: [Icone, FocusTrap],
   template: `
     <div
       class="fixed inset-0 z-20 flex items-start justify-center overflow-y-auto bg-slate-900/50 px-4 pb-10 backdrop-blur-[3px]"
@@ -14,6 +15,7 @@ let proximoId = 0;
       (mousedown)="aoClicarFundo($event)"
     >
       <div
+        appFocusTrap
         role="dialog"
         aria-modal="true"
         [attr.aria-labelledby]="idTitulo"
@@ -44,7 +46,7 @@ export class ModalDialog {
 
   readonly titulo = input.required<string>();
   readonly largura = input('max-w-[520px]');
-  readonly topo = input('pt-[120px]');
+  readonly topo = input('pt-8 sm:pt-[120px]');
   readonly fechar = output<void>();
 
   /** Clique no fundo (e não no conteúdo) fecha. Retorna void: `false` faria o Angular cancelar o foco. */
