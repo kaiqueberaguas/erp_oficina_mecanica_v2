@@ -1,4 +1,12 @@
-import { Component, ElementRef, HostListener, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Observable, forkJoin, of, switchMap } from 'rxjs';
 import { Combobox, OpcaoCombobox } from '../../components/combobox/combobox';
@@ -13,7 +21,15 @@ import { EtapaOrdem, Ordem } from '../../models/ordem';
 import { CarroService } from '../../services/carro.service';
 import { OrdemService } from '../../services/ordem.service';
 import { mensagemErro } from '../../utils/erro-api';
-import { dataBr, hojeIso, lerMoeda, maskMoeda, maskPlaca, moeda, numero2 } from '../../utils/formatacao';
+import {
+  dataBr,
+  hojeIso,
+  lerMoeda,
+  maskMoeda,
+  maskPlaca,
+  moeda,
+  numero2,
+} from '../../utils/formatacao';
 import { ListaPaginada, TAMANHO_PAGINA } from '../../utils/lista-paginada';
 
 type Aba = 'todas' | 'abertas' | 'finalizadas' | 'canceladas';
@@ -45,10 +61,42 @@ const PASSOS: {
   botao: string;
   data: (o: Ordem) => string | null;
 }[] = [
-  { chave: 'entrada', rotulo: 'Entrada do Veículo', cor: 'bg-emerald-600', borda: 'border-emerald-600', campo: 'data_entrada_carro', botao: '', data: (o) => o.dataEntradaCarro },
-  { chave: 'inicio', rotulo: 'Início do Serviço', cor: 'bg-amber-600', borda: 'border-amber-600', campo: 'data_inicio_servico', botao: 'Iniciar Manutenção Hoje', data: (o) => o.dataInicioServico },
-  { chave: 'fim', rotulo: 'Fim do Serviço', cor: 'bg-blue-600', borda: 'border-blue-600', campo: 'data_fim_servico', botao: 'Concluir Manutenção', data: (o) => o.dataFimServico },
-  { chave: 'retirada', rotulo: 'Retirada do Veículo', cor: 'bg-violet-600', borda: 'border-violet-600', campo: 'data_retirada_veiculo', botao: 'Registrar Retirada', data: (o) => o.dataRetiradaVeiculo },
+  {
+    chave: 'entrada',
+    rotulo: 'Entrada do Veículo',
+    cor: 'bg-emerald-600',
+    borda: 'border-emerald-600',
+    campo: 'data_entrada_carro',
+    botao: '',
+    data: (o) => o.dataEntradaCarro,
+  },
+  {
+    chave: 'inicio',
+    rotulo: 'Início do Serviço',
+    cor: 'bg-amber-600',
+    borda: 'border-amber-600',
+    campo: 'data_inicio_servico',
+    botao: 'Iniciar Manutenção Hoje',
+    data: (o) => o.dataInicioServico,
+  },
+  {
+    chave: 'fim',
+    rotulo: 'Fim do Serviço',
+    cor: 'bg-blue-600',
+    borda: 'border-blue-600',
+    campo: 'data_fim_servico',
+    botao: 'Concluir Manutenção',
+    data: (o) => o.dataFimServico,
+  },
+  {
+    chave: 'retirada',
+    rotulo: 'Retirada do Veículo',
+    cor: 'bg-violet-600',
+    borda: 'border-violet-600',
+    campo: 'data_retirada_veiculo',
+    botao: 'Registrar Retirada',
+    data: (o) => o.dataRetiradaVeiculo,
+  },
 ];
 
 /** Colunas que o usuário pode ocultar (OS e Ações ficam sempre visíveis). */
@@ -64,7 +112,7 @@ const COLUNAS = [
 type ColunaId = (typeof COLUNAS)[number]['id'];
 const CHAVE_COLUNAS_OCULTAS = 'erp.ordens.colunasOcultas';
 
-const paraOpcao =(c: Carro): OpcaoCombobox => {
+const paraOpcao = (c: Carro): OpcaoCombobox => {
   const dono = c.clienteNome ?? '—';
   return {
     id: c.id,
@@ -138,7 +186,8 @@ export class Ordens implements OnInit {
   @HostListener('document:click', ['$event'])
   protected aoClicarFora(ev: Event): void {
     const area = this.host.nativeElement.querySelector('#colunas-area');
-    if (this.menuColunasAberto() && !area?.contains(ev.target as Node)) this.menuColunasAberto.set(false);
+    if (this.menuColunasAberto() && !area?.contains(ev.target as Node))
+      this.menuColunasAberto.set(false);
   }
 
   @HostListener('document:keydown.escape', ['$event'])
@@ -177,7 +226,12 @@ export class Ordens implements OnInit {
   protected readonly abas: { id: Aba; rotulo: string; fundo: string; texto: string }[] = [
     { id: 'todas', rotulo: 'Todas', fundo: 'bg-slate-200', texto: 'text-slate-700' },
     { id: 'abertas', rotulo: 'Abertas', fundo: 'bg-amber-100', texto: 'text-amber-800' },
-    { id: 'finalizadas', rotulo: 'Finalizadas', fundo: 'bg-emerald-100', texto: 'text-emerald-800' },
+    {
+      id: 'finalizadas',
+      rotulo: 'Finalizadas',
+      fundo: 'bg-emerald-100',
+      texto: 'text-emerald-800',
+    },
     { id: 'canceladas', rotulo: 'Canceladas', fundo: 'bg-rose-100', texto: 'text-rose-800' },
   ];
 
@@ -216,7 +270,10 @@ export class Ordens implements OnInit {
     ).subscribe({
       next: (respostas) =>
         this.contagens.set(
-          Object.fromEntries(chaves.map((id, i) => [id, respostas[i].total])) as Record<Aba, number>,
+          Object.fromEntries(chaves.map((id, i) => [id, respostas[i].total])) as Record<
+            Aba,
+            number
+          >,
         ),
       error: () => undefined, // as contagens são só informativas; a lista já mostra o erro.
     });
@@ -251,7 +308,12 @@ export class Ordens implements OnInit {
   }
 
   // ----- formulário (nova / editar)
-  protected readonly form = signal<FormOrdem>({ carroId: null, descricao: '', valor: '', data: this.hoje });
+  protected readonly form = signal<FormOrdem>({
+    carroId: null,
+    descricao: '',
+    valor: '',
+    data: this.hoje,
+  });
   protected readonly tocado = signal(false);
   protected readonly salvando = signal(false);
   /** Mensagem devolvida pela API ao salvar. */
@@ -411,14 +473,18 @@ export class Ordens implements OnInit {
   }
 
   /** Finalizada e Cancelada são etapas finais. */
-  protected readonly travada = computed(() => (this.alvo()?.etapa ?? EtapaOrdem.Rascunho) >= EtapaOrdem.Finalizada);
+  protected readonly travada = computed(
+    () => (this.alvo()?.etapa ?? EtapaOrdem.Rascunho) >= EtapaOrdem.Finalizada,
+  );
 
   protected podeEscolher(etapa: EtapaOrdem): boolean {
     return !this.travada() && etapa >= (this.alvo()?.etapa ?? EtapaOrdem.Rascunho);
   }
 
   protected readonly erroMotivo = computed(() =>
-    this.statusTocado() && this.statusSelecionado() === EtapaOrdem.Cancelada && !this.motivo().trim()
+    this.statusTocado() &&
+    this.statusSelecionado() === EtapaOrdem.Cancelada &&
+    !this.motivo().trim()
       ? 'Informe o motivo do cancelamento.'
       : '',
   );
@@ -427,7 +493,8 @@ export class Ordens implements OnInit {
     if (this.travada()) return 'Etapa final: esta OS não pode mais mudar de etapa.';
     if (this.statusSelecionado() === EtapaOrdem.Finalizada)
       return 'Ao salvar, a data de fim do serviço será preenchida com hoje.';
-    if (this.statusSelecionado() === EtapaOrdem.Cancelada) return 'Informe o motivo para cancelar a OS.';
+    if (this.statusSelecionado() === EtapaOrdem.Cancelada)
+      return 'Informe o motivo para cancelar a OS.';
     return 'A OS só avança para uma etapa posterior; as datas são preenchidas automaticamente.';
   });
 

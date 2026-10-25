@@ -27,3 +27,16 @@ a:focus-visible {
   outline: 2px solid var(--color-sky-600);
   outline-offset: 2px;
 }
+
+::placeholder {
+  color: var(--color-slate-500);
+  opacity: 1;
+}
+
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

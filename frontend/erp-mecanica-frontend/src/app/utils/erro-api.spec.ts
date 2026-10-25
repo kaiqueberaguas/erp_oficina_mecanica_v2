@@ -14,7 +14,10 @@ describe('mensagemErro', () => {
   it('prefere a primeira mensagem de validação', () => {
     const erro = new HttpErrorResponse({
       status: 400,
-      error: { title: 'One or more validation errors occurred.', errors: { Cpf: ['CPF inválido.'] } },
+      error: {
+        title: 'One or more validation errors occurred.',
+        errors: { Cpf: ['CPF inválido.'] },
+      },
     });
     expect(mensagemErro(erro)).toBe('CPF inválido.');
   });
@@ -29,8 +32,11 @@ describe('mensagemErro', () => {
 
   it('cai no texto padrão quando o corpo não tem mensagem', () => {
     expect(mensagemErro(new HttpErrorResponse({ status: 500 }), 'Padrão.')).toBe('Padrão.');
-    expect(mensagemErro(new HttpErrorResponse({ status: 500, error: { errors: { A: [1] } } }), 'Padrão.')).toBe(
-      'Padrão.',
-    );
+    expect(
+      mensagemErro(
+        new HttpErrorResponse({ status: 500, error: { errors: { A: [1] } } }),
+        'Padrão.',
+      ),
+    ).toBe('Padrão.');
   });
 });

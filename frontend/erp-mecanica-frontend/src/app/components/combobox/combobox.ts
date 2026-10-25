@@ -99,8 +99,7 @@ export class Combobox {
   private readonly digitado = signal<string | null>(null);
 
   protected readonly texto = computed(
-    () =>
-      this.digitado() ?? this.opcoes().find((o) => o.id === this.valor())?.rotulo ?? '',
+    () => this.digitado() ?? this.opcoes().find((o) => o.id === this.valor())?.rotulo ?? '',
   );
 
   protected readonly opcoesFiltradas = computed(() => {

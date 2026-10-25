@@ -1,5 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  TestRequest,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -18,7 +22,12 @@ const cliente = (id: number, extra: Partial<Cliente> = {}): Cliente => ({
   ...extra,
 });
 
-const pagina = (items: Cliente[], total = items.length, page = 1) => ({ items, total, page, pageSize: 10 });
+const pagina = (items: Cliente[], total = items.length, page = 1) => ({
+  items,
+  total,
+  page,
+  pageSize: 10,
+});
 
 describe('Clientes', () => {
   let fixture: ComponentFixture<Clientes>;
@@ -29,7 +38,9 @@ describe('Clientes', () => {
   const el = (): HTMLElement => fixture.nativeElement;
   const q = <T extends HTMLElement>(seletor: string) => el().querySelector<T>(seletor)!;
   const botao = (texto: string) =>
-    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().includes(texto))!;
+    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().includes(texto),
+    )!;
 
   const listagem = (): TestRequest => http.expectOne((r) => r.method === 'GET' && r.url === url);
   const iniciar = (itens: Cliente[] = [cliente(1)], total = itens.length) => {
@@ -65,7 +76,9 @@ describe('Clientes', () => {
       fixture.detectChanges();
       expect(el().textContent).toContain('Carregando clientes...');
 
-      listagem().flush(pagina([cliente(1, { totalCarros: 2 }), cliente(2, { totalCarros: 1 }), cliente(3)], 3));
+      listagem().flush(
+        pagina([cliente(1, { totalCarros: 2 }), cliente(2, { totalCarros: 1 }), cliente(3)], 3),
+      );
       fixture.detectChanges();
 
       const linhas = el().querySelectorAll('tbody tr');
@@ -200,7 +213,11 @@ describe('Clientes', () => {
       fixture.detectChanges();
 
       const req = http.expectOne((r) => r.method === 'POST');
-      expect(req.request.body).toEqual({ nome: 'Ana Souza', cpf: '529.982.247-25', contato: '(11) 91234-5678' });
+      expect(req.request.body).toEqual({
+        nome: 'Ana Souza',
+        cpf: '529.982.247-25',
+        contato: '(11) 91234-5678',
+      });
       expect(el().textContent).toContain('Salvando...');
       pagina$().salvarCliente(); // duplo clique é ignorado enquanto salva
       req.flush(cliente(9));
@@ -238,10 +255,15 @@ describe('Clientes', () => {
       pagina$().salvarCliente();
       http
         .expectOne((r) => r.method === 'POST')
-        .flush({ title: 'Já existe um cliente cadastrado com este CPF.' }, { status: 409, statusText: 'Conflict' });
+        .flush(
+          { title: 'Já existe um cliente cadastrado com este CPF.' },
+          { status: 409, statusText: 'Conflict' },
+        );
       fixture.detectChanges();
 
-      expect(q('[role=alert]').textContent).toContain('Já existe um cliente cadastrado com este CPF.');
+      expect(q('[role=alert]').textContent).toContain(
+        'Já existe um cliente cadastrado com este CPF.',
+      );
       expect(pagina$().salvando()).toBe(false);
       expect(pagina$().mostrarModalForm()).toBe(true);
     });
@@ -280,7 +302,9 @@ describe('Clientes', () => {
       expect(el().textContent).toContain('2 veículos');
 
       pagina$().excluirCliente();
-      http.expectOne((r) => r.method === 'DELETE' && r.url === `${url}/1`).flush(null, { status: 204, statusText: 'No Content' });
+      http
+        .expectOne((r) => r.method === 'DELETE' && r.url === `${url}/1`)
+        .flush(null, { status: 204, statusText: 'No Content' });
       fixture.detectChanges();
 
       expect(toast.mensagem()).toBe('Cliente excluído.');
@@ -309,7 +333,9 @@ describe('Clientes', () => {
       pagina$().abrirModalExclusao(cliente(1));
 
       pagina$().excluirCliente();
-      http.expectOne((r) => r.method === 'DELETE').flush({ title: 'Cliente não encontrado.' }, { status: 404, statusText: 'Not Found' });
+      http
+        .expectOne((r) => r.method === 'DELETE')
+        .flush({ title: 'Cliente não encontrado.' }, { status: 404, statusText: 'Not Found' });
 
       expect(toast.mensagem()).toBe('Cliente não encontrado.');
       expect(pagina$().clienteSelecionado()).toBeNull();

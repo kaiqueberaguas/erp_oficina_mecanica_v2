@@ -99,6 +99,8 @@ describe('Dashboard', () => {
     http.expectOne(url).flush(null, { status: 500, statusText: 'Server Error' });
     await fixture.whenStable();
 
-    expect(el.querySelector('[role=alert]')?.textContent).toContain('Não foi possível carregar o dashboard.');
+    expect(el.querySelector('[role=alert]')?.textContent).toContain(
+      'Não foi possível carregar o dashboard.',
+    );
   });
 });

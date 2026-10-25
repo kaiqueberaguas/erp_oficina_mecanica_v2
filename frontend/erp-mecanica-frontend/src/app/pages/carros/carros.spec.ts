@@ -1,5 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  TestRequest,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -30,7 +34,12 @@ const cliente = (id: number, nome = `Cliente ${id}`): Cliente => ({
   totalCarros: 0,
 });
 
-const pagina = <T>(items: T[], total = items.length, page = 1) => ({ items, total, page, pageSize: 10 });
+const pagina = <T>(items: T[], total = items.length, page = 1) => ({
+  items,
+  total,
+  page,
+  pageSize: 10,
+});
 
 describe('Carros', () => {
   let fixture: ComponentFixture<Carros>;
@@ -40,10 +49,14 @@ describe('Carros', () => {
   const el = (): HTMLElement => fixture.nativeElement;
   const q = <T extends HTMLElement>(seletor: string) => el().querySelector<T>(seletor)!;
   const botao = (texto: string) =>
-    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().includes(texto))!;
+    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().includes(texto),
+    )!;
 
-  const listagem = (): TestRequest => http.expectOne((r) => r.method === 'GET' && r.url === urlCarros);
-  const clientes = (): TestRequest => http.expectOne((r) => r.method === 'GET' && r.url === urlClientes);
+  const listagem = (): TestRequest =>
+    http.expectOne((r) => r.method === 'GET' && r.url === urlCarros);
+  const clientes = (): TestRequest =>
+    http.expectOne((r) => r.method === 'GET' && r.url === urlClientes);
   const iniciar = (itens: Carro[] = [carro(1)], total = itens.length) => {
     fixture.detectChanges();
     listagem().flush(pagina(itens, total));
@@ -77,7 +90,11 @@ describe('Carros', () => {
       expect(el().textContent).toContain('Carregando veículos...');
 
       listagem().flush(
-        pagina([carro(1, { totalOrdens: 3 }), carro(2, { totalOrdens: 1, clienteNome: null, placa: 'RIO2A18' }), carro(3)]),
+        pagina([
+          carro(1, { totalOrdens: 3 }),
+          carro(2, { totalOrdens: 1, clienteNome: null, placa: 'RIO2A18' }),
+          carro(3),
+        ]),
       );
       fixture.detectChanges();
 
@@ -143,7 +160,11 @@ describe('Carros', () => {
       fixture.detectChanges();
       clientes().flush(pagina([cliente(3, 'Ana Souza'), cliente(4)]));
 
-      expect(pg().opcoesClientes().map((o: any) => o.id)).toEqual([3, 4]);
+      expect(
+        pg()
+          .opcoesClientes()
+          .map((o: any) => o.id),
+      ).toEqual([3, 4]);
       pg().salvarCarro();
       fixture.detectChanges();
 
@@ -180,7 +201,11 @@ describe('Carros', () => {
       expect(req.request.params.get('busca')).toBe('ana');
       expect(req.request.params.get('pageSize')).toBe('20');
       req.flush(pagina([cliente(5, 'Ana')]));
-      expect(pg().opcoesClientes().map((o: any) => o.id)).toEqual([5]);
+      expect(
+        pg()
+          .opcoesClientes()
+          .map((o: any) => o.id),
+      ).toEqual([5]);
     });
 
     it('informa a falha ao carregar clientes', () => {
@@ -201,7 +226,12 @@ describe('Carros', () => {
       pg().salvarCarro();
       fixture.detectChanges();
       const req = http.expectOne((r) => r.method === 'POST' && r.url === urlCarros);
-      expect(req.request.body).toEqual({ clienteId: 3, marca: 'Fiat', modelo: 'Argo', placa: 'ABC-1234' });
+      expect(req.request.body).toEqual({
+        clienteId: 3,
+        marca: 'Fiat',
+        modelo: 'Argo',
+        placa: 'ABC-1234',
+      });
       pg().salvarCarro(); // ignorado enquanto salva
       req.flush(carro(9));
       fixture.detectChanges();
@@ -220,7 +250,11 @@ describe('Carros', () => {
       expect(pg().form().placa).toBe('ABC-1234');
       // O proprietário atual não veio na primeira página da busca: continua selecionável.
       clientes().flush(pagina([cliente(7)]));
-      expect(pg().opcoesClientes().map((o: any) => o.id)).toEqual([3, 7]);
+      expect(
+        pg()
+          .opcoesClientes()
+          .map((o: any) => o.id),
+      ).toEqual([3, 7]);
 
       pg().salvarCarro();
       http.expectOne((r) => r.method === 'PUT' && r.url === `${urlCarros}/4`).flush(carro(4));
@@ -235,7 +269,11 @@ describe('Carros', () => {
       pg().editarCarro(carro(4, { clienteNome: null }));
       clientes().flush(pagina([cliente(3)]));
 
-      expect(pg().opcoesClientes().map((o: any) => o.id)).toEqual([3]);
+      expect(
+        pg()
+          .opcoesClientes()
+          .map((o: any) => o.id),
+      ).toEqual([3]);
     });
 
     it('mostra o erro da API (placa duplicada) e mantém o modal aberto', () => {
@@ -247,10 +285,15 @@ describe('Carros', () => {
       pg().salvarCarro();
       http
         .expectOne((r) => r.method === 'POST')
-        .flush({ title: 'Já existe um carro cadastrado com esta placa.' }, { status: 409, statusText: 'Conflict' });
+        .flush(
+          { title: 'Já existe um carro cadastrado com esta placa.' },
+          { status: 409, statusText: 'Conflict' },
+        );
       fixture.detectChanges();
 
-      expect(q('[role=alert]').textContent).toContain('Já existe um carro cadastrado com esta placa.');
+      expect(q('[role=alert]').textContent).toContain(
+        'Já existe um carro cadastrado com esta placa.',
+      );
       expect(pg().salvando()).toBe(false);
       expect(pg().mostrarModalForm()).toBe(true);
     });
@@ -277,7 +320,9 @@ describe('Carros', () => {
       expect(el().textContent).toContain('2 OS');
 
       pg().excluirCarro();
-      http.expectOne((r) => r.method === 'DELETE' && r.url === `${urlCarros}/1`).flush(null, { status: 204, statusText: 'No Content' });
+      http
+        .expectOne((r) => r.method === 'DELETE' && r.url === `${urlCarros}/1`)
+        .flush(null, { status: 204, statusText: 'No Content' });
 
       expect(toast.mensagem()).toBe('Veículo excluído.');
       expect(pg().carroSelecionado()).toBeNull();
@@ -300,7 +345,9 @@ describe('Carros', () => {
       pg().abrirModalExclusao(carro(1));
 
       pg().excluirCarro();
-      http.expectOne((r) => r.method === 'DELETE').flush({ title: 'Carro não encontrado.' }, { status: 404, statusText: 'Not Found' });
+      http
+        .expectOne((r) => r.method === 'DELETE')
+        .flush({ title: 'Carro não encontrado.' }, { status: 404, statusText: 'Not Found' });
 
       expect(toast.mensagem()).toBe('Carro não encontrado.');
       expect(pg().carroSelecionado()).toBeNull();

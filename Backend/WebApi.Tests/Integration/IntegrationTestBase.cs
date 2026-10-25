@@ -18,7 +18,9 @@ public abstract class IntegrationTestBase(AuthApiFactory factory)
         var client = factory.CreateClient();
         var registro = new RegisterRequest
         {
-            Nome = "Crud", Login = $"crud-{Guid.NewGuid():N}@oficina.com", Senha = "Senha@123",
+            Nome = "Crud",
+            Login = $"crud-{Guid.NewGuid():N}@oficina.com",
+            Senha = "Senha@123",
         };
         await client.PostAsJsonAsync("/api/v1/auth/register", registro);
         var login = await client.PostAsJsonAsync("/api/v1/auth/login",

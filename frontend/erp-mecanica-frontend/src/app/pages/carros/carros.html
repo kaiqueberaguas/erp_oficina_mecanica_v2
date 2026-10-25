@@ -26,11 +26,23 @@
   </button>
 </div>
 
-<section aria-label="Lista de veículos" class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+<section
+  aria-label="Lista de veículos"
+  class="overflow-hidden rounded-xl border border-slate-200 bg-white"
+>
   @if (lista.erro()) {
-    <div role="alert" class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-sm text-rose-800">
+    <div
+      role="alert"
+      class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-sm text-rose-800"
+    >
       <span>{{ lista.erro() }}</span>
-      <button type="button" (click)="lista.carregar()" class="h-9 cursor-pointer rounded-lg border border-rose-300 bg-white px-3 font-medium hover:bg-rose-50">Tentar novamente</button>
+      <button
+        type="button"
+        (click)="lista.carregar()"
+        class="h-9 cursor-pointer rounded-lg border border-rose-300 bg-white px-3 font-medium hover:bg-rose-50"
+      >
+        Tentar novamente
+      </button>
     </div>
   } @else if (lista.itens().length > 0) {
     <div class="overflow-x-auto">
@@ -48,21 +60,32 @@
         <tbody>
           @for (v of lista.itens(); track v.id) {
             <tr class="border-b border-slate-100">
-              <td class="h-[60px] pr-3 pl-5 text-slate-600 tabular-nums">{{ idFormatado(v.id) }}</td>
+              <td class="h-[60px] pr-3 pl-5 text-slate-600 tabular-nums">
+                {{ idFormatado(v.id) }}
+              </td>
               <td class="px-3">
-                <span class="inline-block rounded border-2 border-slate-400 bg-white px-2 py-0.5 font-mono text-[13px] font-semibold tracking-wider">{{ maskPlaca(v.placa) }}</span>
+                <span
+                  class="inline-block rounded border-2 border-slate-400 bg-white px-2 py-0.5 font-mono text-[13px] font-semibold tracking-wider"
+                  >{{ maskPlaca(v.placa) }}</span
+                >
               </td>
               <td class="px-3">
                 <span class="font-semibold">{{ v.marca }}</span>
                 <span class="text-slate-700">{{ v.modelo }}</span>
               </td>
               <td class="px-3">
-                <a routerLink="/clientes" class="font-medium text-sky-700 hover:text-sky-800 hover:underline">{{ nomeDono(v) }}</a>
+                <a
+                  routerLink="/clientes"
+                  class="font-medium text-sky-700 hover:text-sky-800 hover:underline"
+                  >{{ nomeDono(v) }}</a
+                >
               </td>
               <td class="px-3">
                 <span
                   class="inline-flex items-center rounded-full px-2.5 py-[3px] text-[13px] font-semibold"
-                  [class]="v.totalOrdens ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-600'"
+                  [class]="
+                    v.totalOrdens ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-600'
+                  "
                   >{{ rotuloOs(v) }}</span
                 >
               </td>
@@ -109,26 +132,41 @@
       (paginaChange)="lista.carregar($event)"
     />
   } @else if (lista.carregando()) {
-    <p class="m-0 px-6 py-16 text-center text-sm text-slate-600" role="status">Carregando veículos...</p>
+    <p class="m-0 px-6 py-16 text-center text-sm text-slate-600" role="status">
+      Carregando veículos...
+    </p>
   } @else {
     <div class="flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span class="flex size-[72px] items-center justify-center rounded-full bg-slate-100 text-slate-500">
+      <span
+        class="flex size-[72px] items-center justify-center rounded-full bg-slate-100 text-slate-500"
+      >
         <app-icone nome="carro" [tamanho]="34" [espessura]="1.75" />
       </span>
       <h2 class="m-0 text-lg font-semibold">Nenhum veículo encontrado</h2>
       <p class="m-0 max-w-[380px] text-sm text-slate-600">
         Confira a placa digitada ou cadastre um novo veículo.
       </p>
-      <button type="button" (click)="limparBusca()" class="mt-1 h-10 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-50">Limpar busca</button>
+      <button
+        type="button"
+        (click)="limparBusca()"
+        class="mt-1 h-10 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-50"
+      >
+        Limpar busca
+      </button>
     </div>
   }
 </section>
 
 @if (mostrarModalForm()) {
-  <app-modal-dialog [titulo]="editando() ? 'Editar Veículo' : 'Cadastrar Veículo'" (fechar)="fecharForm()">
+  <app-modal-dialog
+    [titulo]="editando() ? 'Editar Veículo' : 'Cadastrar Veículo'"
+    (fechar)="fecharForm()"
+  >
     <form (ngSubmit)="salvarCarro()" novalidate class="flex flex-col gap-4 px-6 pt-[22px] pb-6">
       <div class="flex flex-col gap-1.5">
-        <label for="v-dono" class="text-sm font-semibold text-slate-700">Proprietário / Cliente <span class="text-rose-700">*</span></label>
+        <label for="v-dono" class="text-sm font-semibold text-slate-700"
+          >Proprietário / Cliente <span class="text-rose-700">*</span></label
+        >
         <app-combobox
           inputId="v-dono"
           placeholder="Buscar cliente por nome ou CPF"
@@ -139,54 +177,105 @@
           (valorChange)="escolherCliente($event)"
           (buscaChange)="buscarClientes($event)"
         />
-        @if (erro('clienteId')) { <span class="text-[13px] text-rose-700">{{ erro('clienteId') }}</span> }
+        @if (erro('clienteId')) {
+          <span class="text-[13px] text-rose-700">{{ erro('clienteId') }}</span>
+        }
       </div>
-      <div class="grid grid-cols-2 gap-3.5">
+      <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         <div class="flex min-w-0 flex-col gap-1.5">
-          <label for="v-marca" class="text-sm font-semibold text-slate-700">Marca <span class="text-rose-700">*</span></label>
+          <label for="v-marca" class="text-sm font-semibold text-slate-700"
+            >Marca <span class="text-rose-700">*</span></label
+          >
           <input
-            id="v-marca" name="marca" type="text" list="v-marcas" maxlength="50" placeholder="ex: Toyota"
-            [ngModel]="form().marca" (ngModelChange)="aoDigitar('marca', $event)"
+            id="v-marca"
+            name="marca"
+            type="text"
+            list="v-marcas"
+            maxlength="50"
+            placeholder="ex: Toyota"
+            [ngModel]="form().marca"
+            (ngModelChange)="aoDigitar('marca', $event)"
             class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px]"
+            [attr.aria-invalid]="erro('marca') ? 'true' : null"
+            [attr.aria-describedby]="erro('marca') ? 'v-marca-erro' : null"
             [class]="erro('marca') ? 'border-rose-600' : 'border-slate-300'"
           />
           <datalist id="v-marcas">
-            @for (m of marcas; track m) { <option [value]="m"></option> }
+            @for (m of marcas; track m) {
+              <option [value]="m"></option>
+            }
           </datalist>
-          @if (erro('marca')) { <span class="text-[13px] text-rose-700">{{ erro('marca') }}</span> }
+          @if (erro('marca')) {
+            <span id="v-marca-erro" class="text-[13px] text-rose-700">{{ erro('marca') }}</span>
+          }
         </div>
         <div class="flex min-w-0 flex-col gap-1.5">
-          <label for="v-modelo" class="text-sm font-semibold text-slate-700">Modelo <span class="text-rose-700">*</span></label>
+          <label for="v-modelo" class="text-sm font-semibold text-slate-700"
+            >Modelo <span class="text-rose-700">*</span></label
+          >
           <input
-            id="v-modelo" name="modelo" type="text" maxlength="50" placeholder="ex: Onix 1.0 Turbo"
-            [ngModel]="form().modelo" (ngModelChange)="aoDigitar('modelo', $event)"
+            id="v-modelo"
+            name="modelo"
+            type="text"
+            maxlength="50"
+            placeholder="ex: Onix 1.0 Turbo"
+            [ngModel]="form().modelo"
+            (ngModelChange)="aoDigitar('modelo', $event)"
             class="box-border h-11 min-w-0 rounded-lg border px-3.5 text-[15px]"
+            [attr.aria-invalid]="erro('modelo') ? 'true' : null"
+            [attr.aria-describedby]="erro('modelo') ? 'v-modelo-erro' : null"
             [class]="erro('modelo') ? 'border-rose-600' : 'border-slate-300'"
           />
-          @if (erro('modelo')) { <span class="text-[13px] text-rose-700">{{ erro('modelo') }}</span> }
+          @if (erro('modelo')) {
+            <span id="v-modelo-erro" class="text-[13px] text-rose-700">{{ erro('modelo') }}</span>
+          }
         </div>
       </div>
       <div class="flex flex-col gap-1.5">
-        <label for="v-placa" class="text-sm font-semibold text-slate-700">Placa <span class="text-rose-700">*</span></label>
+        <label for="v-placa" class="text-sm font-semibold text-slate-700"
+          >Placa <span class="text-rose-700">*</span></label
+        >
         <input
-          id="v-placa" name="placa" type="text" maxlength="8" placeholder="AAA1A23 ou AAA-1234"
+          id="v-placa"
+          name="placa"
+          type="text"
+          maxlength="8"
+          placeholder="AAA1A23 ou AAA-1234"
           aria-describedby="v-placa-help"
-          [ngModel]="form().placa" (ngModelChange)="aoDigitar('placa', $event)"
+          [ngModel]="form().placa"
+          (ngModelChange)="aoDigitar('placa', $event)"
           class="box-border h-11 rounded-lg border px-3.5 font-mono text-[15px] uppercase"
+          [attr.aria-invalid]="erro('placa') ? 'true' : null"
+          [attr.aria-describedby]="erro('placa') ? 'v-placa-erro' : null"
           [class]="erro('placa') ? 'border-rose-600' : 'border-slate-300'"
         />
-        <span id="v-placa-help" class="text-[13px]" [class]="erro('placa') ? 'text-rose-700' : 'text-slate-500'">
+        <span
+          id="v-placa-help"
+          class="text-[13px]"
+          [class]="erro('placa') ? 'text-rose-700' : 'text-slate-500'"
+        >
           {{ erro('placa') || 'Máscara automática: Mercosul (AAA1A23) ou tradicional (AAA-1234).' }}
         </span>
       </div>
-      @if (erroApi()) { <span role="alert" class="text-[13px] text-rose-700">{{ erroApi() }}</span> }
+      @if (erroApi()) {
+        <span role="alert" class="text-[13px] text-rose-700">{{ erroApi() }}</span>
+      }
       <div class="mt-2 flex justify-end gap-2.5">
-        <button type="button" (click)="fecharForm()" class="h-11 cursor-pointer rounded-lg border border-slate-300 bg-white px-[18px] text-[15px] font-medium hover:bg-slate-50">Cancelar</button>
         <button
-          type="submit" [disabled]="salvando()"
+          type="button"
+          (click)="fecharForm()"
+          class="h-11 cursor-pointer rounded-lg border border-slate-300 bg-white px-[18px] text-[15px] font-medium hover:bg-slate-50"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="salvando()"
           class="h-11 cursor-pointer rounded-lg px-[18px] text-[15px] font-semibold text-white"
           [class]="salvando() ? 'bg-slate-500' : 'bg-sky-700 hover:bg-sky-800'"
-        >{{ salvando() ? 'Salvando...' : 'Salvar Veículo' }}</button>
+        >
+          {{ salvando() ? 'Salvando...' : 'Salvar Veículo' }}
+        </button>
       </div>
     </form>
   </app-modal-dialog>
@@ -199,11 +288,14 @@
     (cancelar)="cancelarExclusao()"
   >
     <span resumo>
-      <strong class="text-slate-900">{{ maskPlaca(alvo.placa) }} · {{ alvo.marca }} {{ alvo.modelo }}</strong> · {{ nomeDono(alvo) }}
+      <strong class="text-slate-900"
+        >{{ maskPlaca(alvo.placa) }} · {{ alvo.marca }} {{ alvo.modelo }}</strong
+      >
+      · {{ nomeDono(alvo) }}
     </span>
     <span aviso>
-      <strong>Atenção:</strong> a exclusão deste veículo removerá também as ordens de serviço atreladas
-      a ele ({{ rotuloOs(alvo) }}). Esta ação não pode ser desfeita.
+      <strong>Atenção:</strong> a exclusão deste veículo removerá também as ordens de serviço
+      atreladas a ele ({{ rotuloOs(alvo) }}). Esta ação não pode ser desfeita.
     </span>
   </app-confirm-delete-modal>
 }

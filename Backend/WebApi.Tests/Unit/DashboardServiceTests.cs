@@ -25,8 +25,12 @@ public class DashboardServiceTests
         DateOnly? entrada = null, DateOnly? fim = null) =>
         _db.TbOrdensServicos.Add(new TbOrdensServico
         {
-            Carro = NovoCarro(marca), DescricaoOrdem = "Serviço", ValorServico = valor, Etapa = etapa,
-            DataEntradaCarro = entrada ?? new DateOnly(2026, 1, 1), DataFimServico = fim,
+            Carro = NovoCarro(marca),
+            DescricaoOrdem = "Serviço",
+            ValorServico = valor,
+            Etapa = etapa,
+            DataEntradaCarro = entrada ?? new DateOnly(2026, 1, 1),
+            DataFimServico = fim,
         });
 
     [Fact]

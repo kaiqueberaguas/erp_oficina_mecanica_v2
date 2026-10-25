@@ -47,7 +47,15 @@ export class Carros implements OnInit {
   private readonly clienteService = inject(ClienteService);
   private readonly toast = inject(ToastService);
 
-  protected readonly marcas = ['Fiat', 'Volkswagen', 'Chevrolet', 'Ford', 'Toyota', 'Honda', 'Hyundai'];
+  protected readonly marcas = [
+    'Fiat',
+    'Volkswagen',
+    'Chevrolet',
+    'Ford',
+    'Toyota',
+    'Honda',
+    'Hyundai',
+  ];
   protected readonly maskPlaca = maskPlaca;
 
   // ----- listagem paginada no servidor
@@ -125,7 +133,12 @@ export class Carros implements OnInit {
     });
     // O proprietário atual precisa estar nas opções mesmo fora do primeiro resultado da busca.
     this.opcoesClientes.set([
-      { id: v.clienteId, rotulo: this.nomeDono(v), busca: this.nomeDono(v), principal: this.nomeDono(v) },
+      {
+        id: v.clienteId,
+        rotulo: this.nomeDono(v),
+        busca: this.nomeDono(v),
+        principal: this.nomeDono(v),
+      },
     ]);
     this.abrirForm();
   }

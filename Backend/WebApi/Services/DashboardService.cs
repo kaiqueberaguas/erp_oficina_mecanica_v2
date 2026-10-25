@@ -38,7 +38,8 @@ public class DashboardService(OficinaDbContext db) : IDashboardService
                 .GroupBy(o => new { o.DataFimServico!.Value.Year, o.DataFimServico!.Value.Month })
                 .Select(g => new
                 {
-                    g.Key.Year, g.Key.Month,
+                    g.Key.Year,
+                    g.Key.Month,
                     Valor = g.Sum(o => o.ValorServico),
                     Quantidade = g.Count(),
                 })

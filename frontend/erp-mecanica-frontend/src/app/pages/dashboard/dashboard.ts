@@ -7,7 +7,8 @@ import { moeda } from '../../utils/formatacao';
 
 const CIRCUNFERENCIA = 2 * Math.PI * 66;
 
-const dec1 = (n: number) => n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const dec1 = (n: number) =>
+  n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 /** Arredonda o máximo para cima até 1, 2, 5 ou 10 × 10^n, para um eixo legível. */
 function maximoEixo(valor: number): number {
@@ -17,7 +18,9 @@ function maximoEixo(valor: number): number {
 }
 
 const rotuloEixo = (n: number) =>
-  n >= 1000 ? (n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + 'k' : n.toLocaleString('pt-BR');
+  n >= 1000
+    ? (n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + 'k'
+    : n.toLocaleString('pt-BR');
 
 const eixo = (max: number) => [1, 0.75, 0.5, 0.25, 0].map((f) => rotuloEixo(max * f));
 
@@ -46,7 +49,9 @@ export class Dashboard {
   protected readonly erro = signal('');
 
   protected readonly total = computed(() => this.dados()?.kpis.totalOrdens ?? 0);
-  protected readonly vazio = computed(() => !this.carregando() && !this.erro() && this.total() === 0);
+  protected readonly vazio = computed(
+    () => !this.carregando() && !this.erro() && this.total() === 0,
+  );
 
   constructor() {
     this.service.obter().subscribe({
@@ -107,14 +112,19 @@ export class Dashboard {
   protected readonly pontosLinha = computed(() => {
     const lista = this.dados()?.faturamentoMensal ?? [];
     return lista
-      .map((m, i) => `${((i + 0.5) * 100).toFixed(0)},${(240 - (m.quantidade / this.maxOrdens()) * 240).toFixed(1)}`)
+      .map(
+        (m, i) =>
+          `${((i + 0.5) * 100).toFixed(0)},${(240 - (m.quantidade / this.maxOrdens()) * 240).toFixed(1)}`,
+      )
       .join(' ');
   });
 
   protected readonly descricaoGrafico = computed(
     () =>
       'Faturamento e quantidade de ordens por mês. ' +
-      (this.dados()?.faturamentoMensal ?? []).map((m) => `${m.mes}: ${moeda(m.valor)}, ${m.quantidade} OS`).join('; '),
+      (this.dados()?.faturamentoMensal ?? [])
+        .map((m) => `${m.mes}: ${moeda(m.valor)}, ${m.quantidade} OS`)
+        .join('; '),
   );
 
   protected readonly rosca = computed(() => {
@@ -143,7 +153,11 @@ export class Dashboard {
   });
 
   protected readonly descricaoRosca = computed(
-    () => 'Status das ordens: ' + this.rosca().map((f) => `${f.rotulo} ${f.qtd} (${f.pct})`).join(', '),
+    () =>
+      'Status das ordens: ' +
+      this.rosca()
+        .map((f) => `${f.rotulo} ${f.qtd} (${f.pct})`)
+        .join(', '),
   );
 
   protected readonly marcas = computed(() => {

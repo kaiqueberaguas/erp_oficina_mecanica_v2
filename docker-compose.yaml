@@ -37,6 +37,7 @@ services:
       ASPNETCORE_HTTP_PORTS: "8080"
       ConnectionStrings__DefaultConnection: "server=mysql;port=3306;database=oficina_mecanica;user=root;password=root"
       Jwt__Key: "chave-somente-para-ambiente-local-docker-trocar-em-producao-0123456789"
+      Docs__Enabled: "true"
       Cors__AllowedOrigins__0: "http://localhost:4200"
     ports:
       - "5234:8080"

@@ -18,7 +18,7 @@ Frontend (Angular)  ──►  Backend (API em C#)  ──►  Banco de dados (M
 | `Frontend/`           | Aplicação Angular                                    |
 | `Infra/scripts/`      | Scripts SQL de criação das tabelas e dados de teste  |
 | `Infra/massa/`        | Gerador da massa de testes de volume (Python + SQL)  |
-| `docker-compose.yaml` | Sobe o banco de dados MySQL                          |
+| `docker-compose.yaml` | Sobe MySQL, API e frontend                           |
 | `Documentacao/`       | Arquitetura e Backlog                                |
 
 ---
@@ -82,6 +82,22 @@ O navegador abre na documentação da API:
 
 Para parar a API, clique em ■ no Visual Studio (ou **Shift + F5**).
 
+### Alternativa: subir tudo com Docker (banco + API + frontend)
+
+Sem precisar do Visual Studio nem do Node, com o Docker Desktop aberto:
+
+```
+docker compose up -d --build
+```
+
+| Serviço             | Endereço                          |
+| :------------------ | :-------------------------------- |
+| Frontend            | http://localhost:4200             |
+| API                 | http://localhost:5234             |
+| Documentação (Scalar) | http://localhost:5234/scalar/v1 |
+
+Para parar: `docker compose down`. Neste modo a documentação da API é habilitada pela configuração `Docs:Enabled` (definida no `docker-compose.yaml`); fora do Docker ela só aparece no ambiente Development.
+
 ---
 
 ## Usuário de teste
@@ -141,6 +157,11 @@ Abra o **Visual Studio Installer** e clique em **Atualizar**.
 
 - [Documentacao/Arquitetura.md](Documentacao/Arquitetura.md): tabelas, rotas da API e decisões técnicas.
 - [Documentacao/Backlog.md](Documentacao/Backlog.md): lista de tarefas.
+
+## Qualidade e CI
+
+- Lint: `npm run lint` (Prettier, em `frontend/erp-mecanica-frontend`) e `dotnet format Erp_Oficina_Mecanica_v2.slnx --verify-no-changes` (em `Backend/`).
+- `.github/workflows/ci.yml` roda, a cada PR para a `master`, o lint, os testes unitários e integrados e o build das imagens Docker.
 
 ## Como contribuir
 

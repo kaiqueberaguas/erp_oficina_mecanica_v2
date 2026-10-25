@@ -227,26 +227,26 @@
 
 ## 14. Acessibilidade e Design System
 
-- [ ] **14.1 Semântica e Navegabilidade por Teclado**
-  - [ ] Revisar semântica HTML5 em todas as telas (`<main>`, `<nav>`, `<header>`, `<footer>`, `<section>`).
-  - [ ] Garantir que todos os inputs tenham `<label>` associado via `for`/`id`.
-  - [ ] Implementar atributos `aria-label`, `aria-describedby` e `role` em modais e botões de ação.
-  - [ ] Validar ciclo de foco com tecla `Tab` e fechamento de modais com `Esc`.
-- [ ] **14.2 Contraste e Responsividade**
-  - [ ] Validar taxa mínima de contraste de cores (4.5:1) nas classes Tailwind.
-  - [ ] Garantir responsividade completa para dispositivos móveis e desktops.
+- [x] **14.1 Semântica e Navegabilidade por Teclado**
+  - [x] Revisar semântica HTML5 em todas as telas (`<main>`, `<nav>`, `<header>`, `<footer>`, `<section>`).
+  - [x] Garantir que todos os inputs tenham `<label>` associado via `for`/`id`.
+  - [x] Implementar atributos `aria-label`, `aria-describedby` e `role` em modais e botões de ação.
+  - [x] Validar ciclo de foco com tecla `Tab` e fechamento de modais com `Esc`.
+- [x] **14.2 Contraste e Responsividade**
+  - [x] Validar taxa mínima de contraste de cores (4.5:1) nas classes Tailwind.
+  - [x] Garantir responsividade completa para dispositivos móveis e desktops.
 
 ---
 
 ## 15. Validação de CI/CD e Documentação
 
-- [ ] **15.1 Pipeline de Integração Contínua (CI)**
-  - [ ] Criar workflow `.github/workflows/ci.yml`.
-  - [ ] Job de linting e verificação de formato de código (.NET e Angular).
-  - [ ] Job de build e execução de **todos os testes unitários e de integração** a cada Pull Request.
-- [ ] **15.2 Pipeline de Entrega Contínua (CD / Docker)**
-  - [ ] Configurar job de build das imagens Docker do backend e frontend.
-  - [ ] Validar compilação limpa dos contêineres.
-- [ ] **15.3 Documentação Final**
-  - [ ] Documentar execução local via `docker compose up -d` no `README.md`.
-  - [ ] Validar documentação Swagger interativa em `/swagger`.
+- [x] **15.1 Pipeline de Integração Contínua (CI)**
+  - [x] Criar workflow `.github/workflows/ci.yml`.
+  - [x] Job de linting e verificação de formato de código (.NET e Angular).
+  - [x] Job de build e execução de **todos os testes unitários e de integração** a cada Pull Request.
+- [x] **15.2 Pipeline de Entrega Contínua (CD / Docker)**
+  - [x] Configurar job de build das imagens Docker do backend e frontend.
+  - [x] Validar compilação limpa dos contêineres.
+- [x] **15.3 Documentação Final**
+  - [x] Documentar execução local via `docker compose up -d` no `README.md`.
+  - [x] Validar documentação Swagger interativa em `/scalar/v1` (Scalar).

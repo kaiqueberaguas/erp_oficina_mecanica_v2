@@ -39,7 +39,10 @@ export function cpfValido(v: string): boolean {
 
 /** Máscara de placa: Mercosul (AAA1A23) ou tradicional (AAA-1234). */
 export function maskPlaca(v: string): string {
-  const r = (v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 7);
+  const r = (v || '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+    .slice(0, 7);
   return /^[A-Z]{3}\d{4}$/.test(r) ? r.slice(0, 3) + '-' + r.slice(3) : r;
 }
 
@@ -64,7 +67,8 @@ export const lerMoeda = (v: string): number =>
   parseFloat((v || '0').replace(/\./g, '').replace(',', '.')) || 0;
 
 /** "2026-10-06" -> "06/10/2026". */
-export const dataBr = (iso: string | null): string => (iso ? iso.split('-').reverse().join('/') : '');
+export const dataBr = (iso: string | null): string =>
+  iso ? iso.split('-').reverse().join('/') : '';
 
 export function hojeIso(): string {
   const t = new Date();

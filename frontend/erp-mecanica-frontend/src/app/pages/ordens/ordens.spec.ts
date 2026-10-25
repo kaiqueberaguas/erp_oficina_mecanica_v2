@@ -1,5 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  TestRequest,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../../components/toast/toast';
@@ -40,7 +44,12 @@ const carro = (id: number, extra: Partial<Carro> = {}): Carro => ({
   ...extra,
 });
 
-const pagina = <T>(items: T[], total = items.length, page = 1) => ({ items, total, page, pageSize: 10 });
+const pagina = <T>(items: T[], total = items.length, page = 1) => ({
+  items,
+  total,
+  page,
+  pageSize: 10,
+});
 
 const TOTAIS = { '': 5, '1,2,3': 3, '4': 1, '5': 1 } as Record<string, number>;
 
@@ -52,16 +61,25 @@ describe('Ordens', () => {
   const el = (): HTMLElement => fixture.nativeElement;
   const q = <T extends HTMLElement>(seletor: string) => el().querySelector<T>(seletor)!;
   const botao = (texto: string) =>
-    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().includes(texto))!;
+    Array.from(el().querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().includes(texto),
+    )!;
 
   const lista = (): TestRequest =>
-    http.expectOne((r) => r.method === 'GET' && r.url === urlOrdens && r.params.get('pageSize') === '10');
+    http.expectOne(
+      (r) => r.method === 'GET' && r.url === urlOrdens && r.params.get('pageSize') === '10',
+    );
   const contagens = (totais = TOTAIS): void => {
-    const reqs = http.match((r) => r.method === 'GET' && r.url === urlOrdens && r.params.get('pageSize') === '1');
+    const reqs = http.match(
+      (r) => r.method === 'GET' && r.url === urlOrdens && r.params.get('pageSize') === '1',
+    );
     expect(reqs.length).toBe(4);
-    reqs.forEach((r) => r.flush(pagina([], totais[r.request.params.getAll('etapa')?.join(',') ?? ''])));
+    reqs.forEach((r) =>
+      r.flush(pagina([], totais[r.request.params.getAll('etapa')?.join(',') ?? ''])),
+    );
   };
-  const veiculos = (): TestRequest => http.expectOne((r) => r.method === 'GET' && r.url === urlCarros);
+  const veiculos = (): TestRequest =>
+    http.expectOne((r) => r.method === 'GET' && r.url === urlCarros);
   const iniciar = (itens: Ordem[] = [ordem(1)]) => {
     fixture.detectChanges();
     lista().flush(pagina(itens));
@@ -96,12 +114,23 @@ describe('Ordens', () => {
   });
 
   describe('colunas', () => {
-    const cabecalhos = () => Array.from(el().querySelectorAll('thead th')).map((th) => th.textContent!.trim());
+    const cabecalhos = () =>
+      Array.from(el().querySelectorAll('thead th')).map((th) => th.textContent!.trim());
     const engrenagem = () => q<HTMLButtonElement>('button[aria-label="Colunas da tabela"]');
 
     it('separa veículo e placa em colunas próprias', () => {
       iniciar();
-      expect(cabecalhos()).toEqual(['OS', 'Veículo', 'Placa', 'Cliente', 'Descrição do Serviço', 'Valor (R$)', 'Entrada', 'Status', 'Ações']);
+      expect(cabecalhos()).toEqual([
+        'OS',
+        'Veículo',
+        'Placa',
+        'Cliente',
+        'Descrição do Serviço',
+        'Valor (R$)',
+        'Entrada',
+        'Status',
+        'Ações',
+      ]);
       const celulas = el().querySelectorAll('tbody tr td');
       expect(celulas[1].textContent!.trim()).toBe('Fiat Argo');
       expect(celulas[2].textContent!.trim()).toBe('ABC-1234');
@@ -137,7 +166,10 @@ describe('Ordens', () => {
 
     it('restaura a preferência salva, ignorando ids inválidos', () => {
       TestBed.resetTestingModule();
-      TestBed.configureTestingModule({ imports: [Ordens], providers: [provideHttpClient(), provideHttpClientTesting()] });
+      TestBed.configureTestingModule({
+        imports: [Ordens],
+        providers: [provideHttpClient(), provideHttpClientTesting()],
+      });
       localStorage.setItem('erp.ordens.colunasOcultas', '["placa","xyz"]');
       montar();
       iniciar();
@@ -147,7 +179,10 @@ describe('Ordens', () => {
 
     it.each(['{quebrado', '{"a":1}'])('usa tudo visível com preferência inválida (%s)', (salvo) => {
       TestBed.resetTestingModule();
-      TestBed.configureTestingModule({ imports: [Ordens], providers: [provideHttpClient(), provideHttpClientTesting()] });
+      TestBed.configureTestingModule({
+        imports: [Ordens],
+        providers: [provideHttpClient(), provideHttpClientTesting()],
+      });
       localStorage.setItem('erp.ordens.colunasOcultas', salvo);
       montar();
       iniciar();
@@ -196,7 +231,12 @@ describe('Ordens', () => {
       fixture.detectChanges();
       expect(el().textContent).toContain('Carregando ordens de serviço...');
 
-      lista().flush(pagina([ordem(124, { etapa: EtapaOrdem.Finalizada }), ordem(2, { placa: null, marca: null, clienteNome: null })]));
+      lista().flush(
+        pagina([
+          ordem(124, { etapa: EtapaOrdem.Finalizada }),
+          ordem(2, { placa: null, marca: null, clienteNome: null }),
+        ]),
+      );
       contagens();
       fixture.detectChanges();
 
@@ -314,7 +354,11 @@ describe('Ordens', () => {
       fixture.detectChanges();
       veiculos().flush(pagina([carro(2), carro(3, { clienteNome: null, placa: 'RIO2A18' })]));
 
-      expect(pg().opcoesVeiculos().map((o: any) => o.id)).toEqual([2, 3]);
+      expect(
+        pg()
+          .opcoesVeiculos()
+          .map((o: any) => o.id),
+      ).toEqual([2, 3]);
       expect(pg().opcoesVeiculos()[0].rotulo).toBe('ABC-1234 - Fiat Argo (Ana Souza)');
       expect(pg().opcoesVeiculos()[1].terciario).toBe('(—)');
       expect(pg().erro('carroId')).toBe('');
@@ -383,7 +427,11 @@ describe('Ordens', () => {
       expect(pg().form().valor).toBe('99,50');
       expect(pg().opcoesVeiculos()[0].rotulo).toBe('ABC-1234 - Fiat Argo (Ana Souza)');
       veiculos().flush(pagina([carro(5)]));
-      expect(pg().opcoesVeiculos().map((o: any) => o.id)).toEqual([2, 5]);
+      expect(
+        pg()
+          .opcoesVeiculos()
+          .map((o: any) => o.id),
+      ).toEqual([2, 5]);
 
       pg().salvar();
       http.expectOne((r) => r.method === 'PUT' && r.url === `${urlOrdens}/8`).flush(ordem(8));
@@ -428,7 +476,10 @@ describe('Ordens', () => {
       pg().abrirDetalhes(o);
       fixture.detectChanges();
     };
-    const passo = (chave: string) => pg().passos().find((p: any) => p.chave === chave);
+    const passo = (chave: string) =>
+      pg()
+        .passos()
+        .find((p: any) => p.chave === chave);
 
     it('sem OS selecionada não há passos nem tempo de oficina', () => {
       expect(pg().passos()).toEqual([]);
@@ -493,7 +544,14 @@ describe('Ordens', () => {
     });
 
     it('retirada registrada aparece com a data', () => {
-      abrir(ordem(1, { etapa: EtapaOrdem.Finalizada, dataInicioServico: '2026-10-02', dataFimServico: '2026-10-06', dataRetiradaVeiculo: '2026-10-08' }));
+      abrir(
+        ordem(1, {
+          etapa: EtapaOrdem.Finalizada,
+          dataInicioServico: '2026-10-02',
+          dataFimServico: '2026-10-06',
+          dataRetiradaVeiculo: '2026-10-08',
+        }),
+      );
 
       expect(passo('retirada').data).toBe('08/10/2026');
       expect(passo('retirada').podeAgir).toBe(false);
@@ -537,12 +595,21 @@ describe('Ordens', () => {
     });
 
     it('registrar retirada repete a etapa atual com a data de hoje', () => {
-      abrir(ordem(1, { etapa: EtapaOrdem.Finalizada, dataInicioServico: '2026-10-02', dataFimServico: '2026-10-06' }));
+      abrir(
+        ordem(1, {
+          etapa: EtapaOrdem.Finalizada,
+          dataInicioServico: '2026-10-02',
+          dataFimServico: '2026-10-06',
+        }),
+      );
 
       pg().registrarPasso('retirada', 'Retirada do Veículo');
 
       const req = patch();
-      expect(req.request.body).toEqual({ etapa: EtapaOrdem.Finalizada, dataRetiradaVeiculo: hojeIso() });
+      expect(req.request.body).toEqual({
+        etapa: EtapaOrdem.Finalizada,
+        dataRetiradaVeiculo: hojeIso(),
+      });
       req.flush(ordem(1, { etapa: EtapaOrdem.Finalizada, dataRetiradaVeiculo: hojeIso() }));
       recarregado();
     });
@@ -600,7 +667,10 @@ describe('Ordens', () => {
         pg().salvarStatus();
 
         const req = patch();
-        expect(req.request.body).toEqual({ etapa: EtapaOrdem.Cancelada, observacao: 'Cliente desistiu' });
+        expect(req.request.body).toEqual({
+          etapa: EtapaOrdem.Cancelada,
+          observacao: 'Cliente desistiu',
+        });
         req.flush(ordem(1, { etapa: EtapaOrdem.Cancelada, observacao: 'Cliente desistiu' }));
         expect(toast.mensagem()).toBe('OS #00001 salva.');
         recarregado();
@@ -691,7 +761,9 @@ describe('Ordens', () => {
       expect(el().textContent).toContain('#00003');
 
       pg().excluir();
-      http.expectOne((r) => r.method === 'DELETE' && r.url === `${urlOrdens}/3`).flush(null, { status: 204, statusText: 'No Content' });
+      http
+        .expectOne((r) => r.method === 'DELETE' && r.url === `${urlOrdens}/3`)
+        .flush(null, { status: 204, statusText: 'No Content' });
 
       expect(toast.mensagem()).toBe('OS #00003 excluída.');
       expect(pg().modo()).toBeNull();
@@ -703,7 +775,12 @@ describe('Ordens', () => {
       pg().abrirExcluir(ordem(3));
 
       pg().excluir();
-      http.expectOne((r) => r.method === 'DELETE').flush({ title: 'Ordem de serviço não encontrada.' }, { status: 404, statusText: 'Not Found' });
+      http
+        .expectOne((r) => r.method === 'DELETE')
+        .flush(
+          { title: 'Ordem de serviço não encontrada.' },
+          { status: 404, statusText: 'Not Found' },
+        );
 
       expect(toast.mensagem()).toBe('Ordem de serviço não encontrada.');
       expect(pg().modo()).toBeNull();
