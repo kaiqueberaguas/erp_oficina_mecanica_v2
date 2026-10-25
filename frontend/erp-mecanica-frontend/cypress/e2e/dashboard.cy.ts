@@ -1,7 +1,16 @@
-import { entrarComoAdmin } from '../support/api';
+import type { Sessao } from '../support/api';
+import { criarCarroApi, criarClienteApi, criarOrdemApi, entrarComoAdmin } from '../support/api';
 
 describe('Dashboard', () => {
-  beforeEach(() => entrarComoAdmin());
+  beforeEach(() => {
+    entrarComoAdmin();
+    // Com o banco sem ordens a tela esconde os gráficos; garante ao menos uma OS.
+    cy.get<Sessao>('@sessao').then((s) =>
+      criarClienteApi(s.token, `Dono E2E ${Date.now()}`).then((c) =>
+        criarCarroApi(s.token, c.id).then((car) => criarOrdemApi(s.token, car.id)),
+      ),
+    );
+  });
 
   it('carrega os indicadores e os gráficos após o login', () => {
     cy.intercept('GET', '**/api/v1/dashboard').as('dashboard');
